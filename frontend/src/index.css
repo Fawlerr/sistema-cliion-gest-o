@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(109, 124, 255, 0.18), transparent 30%),
+    radial-gradient(circle at top right, rgba(43, 210, 255, 0.14), transparent 26%),
+    linear-gradient(160deg, #050816 0%, #0c1326 45%, #101935 100%);
+  color: #edf2ff;
+  font-family: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(125, 145, 255, 0.28);
+  border-radius: 999px;
+}
+
+.glass-panel {
+  background: linear-gradient(180deg, rgba(18, 27, 52, 0.88), rgba(12, 18, 34, 0.92));
+  backdrop-filter: blur(18px);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.page-fade {
+  animation: page-fade-in 360ms ease-out;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

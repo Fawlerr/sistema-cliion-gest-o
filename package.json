@@ -1,0 +1,23 @@
+{
+  "name": "clinic-dashboard-demo",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspaces",
+    "dev": "concurrently \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\"",
+    "build": "npm run build --workspace frontend",
+    "start": "concurrently \"npm run start --workspace backend\" \"npm run preview --workspace frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prisma": "^7.6.0"
+  },
+  "dependencies": {
+    "git": "^0.1.5",
+    "pg": "^8.20.0"
+  }
+}

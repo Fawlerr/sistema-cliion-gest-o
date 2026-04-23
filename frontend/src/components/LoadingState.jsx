@@ -1,0 +1,10 @@
+export function LoadingState({ label = "Carregando dados da clinica..." }) {
+  return (
+    <div className="panel-border glass-panel flex min-h-[260px] items-center justify-center rounded-[28px] p-8">
+      <div className="text-center">
+        <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-white/10 border-t-[color:var(--accent-secondary)]" />
+        <p className="mt-4 text-sm text-[color:var(--text-soft)]">{label}</p>
+      </div>
+    </div>
+  );
+}

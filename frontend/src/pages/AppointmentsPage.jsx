@@ -1,0 +1,302 @@
+import { useMemo, useState } from "react";
+import { Pencil, PlusCircle } from "lucide-react";
+import { useApi } from "../hooks/useApi";
+import { apiRequest, getCollection } from "../lib/api";
+import { formatDateForInput, formatDateTime } from "../lib/formatters";
+import { Badge } from "../components/Badge";
+import { EmptyState } from "../components/EmptyState";
+import { EntityCard } from "../components/EntityCard";
+import { ErrorState } from "../components/ErrorState";
+import { FormField } from "../components/FormField";
+import { LoadingState } from "../components/LoadingState";
+import { Modal } from "../components/Modal";
+import { SectionToolbar } from "../components/SectionToolbar";
+
+function buildInitialForm() {
+  return {
+    id: null,
+    patientId: "",
+    serviceId: "",
+    userId: "",
+    appointmentDate: "",
+    appointmentTime: "",
+    status: "confirmed",
+    notes: ""
+  };
+}
+
+export function AppointmentsPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form, setForm] = useState(buildInitialForm());
+  const [submitError, setSubmitError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  const appointments = useApi((signal) => getCollection("/appointments", { query: { limit: 500 }, signal }), []);
+  const patients = useApi((signal) => getCollection("/patients", { signal }), []);
+  const services = useApi((signal) => getCollection("/services", { signal }), []);
+  const users = useApi((signal) => getCollection("/users", { signal }), []);
+
+  const appointmentCards = useMemo(() => appointments.data?.data || [], [appointments.data]);
+
+  function openCreateModal() {
+    setForm({
+      ...buildInitialForm(),
+      userId: users.data?.data?.[0]?.id ? String(users.data.data[0].id) : ""
+    });
+    setSubmitError("");
+    setIsModalOpen(true);
+  }
+
+  function openEditModal(appointment) {
+    setForm({
+      id: appointment.id,
+      patientId: String(appointment.patientId),
+      serviceId: String(appointment.serviceId),
+      userId: String(appointment.userId),
+      appointmentDate: formatDateForInput(appointment.appointmentDate),
+      appointmentTime: String(appointment.appointmentTime).slice(0, 5),
+      status: appointment.status || "confirmed",
+      notes: appointment.notes || ""
+    });
+    setSubmitError("");
+    setIsModalOpen(true);
+  }
+
+  function closeModal() {
+    setIsModalOpen(false);
+    setSubmitError("");
+  }
+
+  function updateField(field, value) {
+    setForm((current) => ({ ...current, [field]: value }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setIsSaving(true);
+    setSubmitError("");
+
+    try {
+      const payload = {
+        patientId: Number(form.patientId),
+        serviceId: Number(form.serviceId),
+        userId: Number(form.userId),
+        appointmentDate: form.appointmentDate,
+        appointmentTime: form.appointmentTime,
+        status: form.status,
+        notes: form.notes
+      };
+
+      let response;
+
+      if (form.id) {
+        response = await apiRequest(`/appointments/${form.id}`, {
+          method: "PUT",
+          body: payload
+        });
+      } else {
+        response = await apiRequest("/appointments", {
+          method: "POST",
+          body: payload
+        });
+      }
+
+      const savedAppointment = response.data;
+
+      appointments.setData((current) => {
+        if (!current) {
+          return current;
+        }
+
+        const exists = current.data.some((appointment) => appointment.id === savedAppointment.id);
+        const nextData = exists
+          ? current.data.map((appointment) => (appointment.id === savedAppointment.id ? savedAppointment : appointment))
+          : [savedAppointment, ...current.data];
+
+        return {
+          ...current,
+          data: nextData,
+          meta: {
+            ...current.meta,
+            count: exists ? current.meta.count : current.meta.count + 1
+          }
+        };
+      });
+
+      closeModal();
+      appointments.refresh();
+    } catch (error) {
+      setSubmitError(error.message || "Nao foi possivel salvar o agendamento.");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  if (appointments.isLoading || patients.isLoading || services.isLoading || users.isLoading) {
+    return <LoadingState label="Carregando agendamentos..." />;
+  }
+
+  if (appointments.error || patients.error || services.error || users.error) {
+    return <ErrorState message={appointments.error || patients.error || services.error || users.error} />;
+  }
+
+  return (
+    <div className="space-y-6">
+      <SectionToolbar
+        title="Agendamentos"
+        subtitle={`${appointments.data.meta.count} agendamentos carregados com suporte a criacao e edicao.`}
+        actions={
+          <button
+            type="button"
+            onClick={openCreateModal}
+            className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--accent)] px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
+          >
+            <PlusCircle size={18} />
+            Adicionar agendamento
+          </button>
+        }
+      />
+
+      {appointmentCards.length ? (
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {appointmentCards.map((appointment) => (
+            <EntityCard
+              key={appointment.id}
+              title={appointment.patientName}
+              subtitle={appointment.serviceName}
+              meta={[
+                { label: "Quando", value: formatDateTime(appointment.appointmentDate, appointment.appointmentTime) },
+                { label: "Profissional", value: appointment.userName }
+              ]}
+              actions={
+                <div className="flex items-center gap-2">
+                  <Badge value={appointment.status || "sem status"} />
+                  <button
+                    type="button"
+                    onClick={() => openEditModal(appointment)}
+                    className="rounded-2xl border border-white/10 bg-white/5 p-2 text-white transition hover:bg-white/10"
+                  >
+                    <Pencil size={16} />
+                  </button>
+                </div>
+              }
+            >
+              {appointment.notes ? <p className="text-sm text-[color:var(--text-soft)]">{appointment.notes}</p> : null}
+            </EntityCard>
+          ))}
+        </div>
+      ) : (
+        <EmptyState title="Nenhum agendamento encontrado" description="Crie um novo agendamento para comecar a organizar a agenda." />
+      )}
+
+      <Modal
+        open={isModalOpen}
+        title={form.id ? "Editar agendamento" : "Novo agendamento"}
+        subtitle="Os dados serao persistidos diretamente na tabela de agendamentos."
+        onClose={closeModal}
+      >
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="grid gap-4 md:grid-cols-3">
+            <FormField label="Paciente">
+              <select
+                value={form.patientId}
+                onChange={(event) => updateField("patientId", event.target.value)}
+                className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+                required
+              >
+                <option value="">Selecione</option>
+                {patients.data.data.map((patient) => (
+                  <option key={patient.id} value={patient.id}>{patient.name}</option>
+                ))}
+              </select>
+            </FormField>
+
+            <FormField label="Servico">
+              <select
+                value={form.serviceId}
+                onChange={(event) => updateField("serviceId", event.target.value)}
+                className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+                required
+              >
+                <option value="">Selecione</option>
+                {services.data.data.map((service) => (
+                  <option key={service.id} value={service.id}>{service.name}</option>
+                ))}
+              </select>
+            </FormField>
+
+            <FormField label="Profissional">
+              <select
+                value={form.userId}
+                onChange={(event) => updateField("userId", event.target.value)}
+                className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+                required
+              >
+                <option value="">Selecione</option>
+                {users.data.data.map((user) => (
+                  <option key={user.id} value={user.id}>{user.name}</option>
+                ))}
+              </select>
+            </FormField>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <FormField label="Data">
+              <input
+                type="date"
+                value={form.appointmentDate}
+                onChange={(event) => updateField("appointmentDate", event.target.value)}
+                className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+                required
+              />
+            </FormField>
+
+            <FormField label="Hora">
+              <input
+                type="time"
+                value={form.appointmentTime}
+                onChange={(event) => updateField("appointmentTime", event.target.value)}
+                className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+                required
+              />
+            </FormField>
+
+            <FormField label="Status">
+              <select
+                value={form.status}
+                onChange={(event) => updateField("status", event.target.value)}
+                className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+              >
+                <option value="confirmed">Confirmado</option>
+                <option value="pending">Pendente</option>
+                <option value="completed">Concluido</option>
+                <option value="canceled">Cancelado</option>
+              </select>
+            </FormField>
+          </div>
+
+          <FormField label="Observacoes">
+            <textarea
+              rows={3}
+              value={form.notes}
+              onChange={(event) => updateField("notes", event.target.value)}
+              className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+            />
+          </FormField>
+
+          {submitError ? <p className="text-sm text-rose-300">{submitError}</p> : null}
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="rounded-2xl bg-[color:var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
+            >
+              {isSaving ? "Salvando..." : form.id ? "Salvar alteracoes" : "Criar agendamento"}
+            </button>
+          </div>
+        </form>
+      </Modal>
+    </div>
+  );
+}
