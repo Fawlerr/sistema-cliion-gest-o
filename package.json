@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "git": "^0.1.5",
-    "pg": "^8.20.0"
+    "pg": "^8.20.0",
+    "@prisma/adapter-pg": "^7.6.0"
   }
 }
