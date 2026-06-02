@@ -5,8 +5,13 @@ import { authenticate, authorizeRoles } from "../middleware/authMiddleware.js";
 
 export const patientsRouter = Router();
 
-patientsRouter.use(authenticate, authorizeRoles([1, 2]));
+// Apenas autenticação geral (todos logados passam)
+patientsRouter.use(authenticate);
+
+// Todos logados podem ver a lista e ver um paciente específico
 patientsRouter.get("/", asyncHandler(getPatients));
-patientsRouter.post("/", asyncHandler(postPatient));
 patientsRouter.get("/:id", asyncHandler(getPatient));
-patientsRouter.put("/:id", asyncHandler(putPatient));
+
+// Apenas ADMIN e DOCTOR podem criar e editar (a catraca entra aqui!)
+patientsRouter.post("/", authorizeRoles('ADMIN', 'DOCTOR'), asyncHandler(postPatient));
+patientsRouter.put("/:id", authorizeRoles('ADMIN', 'DOCTOR'), asyncHandler(putPatient));

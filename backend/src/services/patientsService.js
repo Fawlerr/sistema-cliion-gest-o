@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { query } from "../db/pool.js";
 import { ApiError } from "../lib/apiError.js";
 
@@ -7,9 +8,9 @@ const patientSelect = `
     name,
     email,
     phone,
-    birth_date AS "birthDate",
+    "birthDate",
     address,
-    created_at AS "createdAt"
+    "createdAt"
   FROM patients
 `;
 
@@ -63,20 +64,23 @@ export async function findPatientForPublicBooking({ name, email, phone }, db = {
 }
 
 export async function createPatientRecord({ name, email, phone, birthDate, address }, db = { query }) {
+  // Gerando um ID único à força pelo Node.js!
+  const generatedId = crypto.randomUUID();
+
   const result = await db.query(
     `
-      INSERT INTO patients (name, email, phone, birth_date, address)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO patients (id, name, email, phone, "birthDate", address)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING
         id,
         name,
         email,
         phone,
-        birth_date AS "birthDate",
+        "birthDate",
         address,
-        created_at AS "createdAt"
+        "createdAt"
     `,
-    [name, email || null, phone || null, birthDate || null, address || null]
+    [generatedId, name, email || null, phone || null, birthDate || null, address || null]
   );
 
   return result.rows[0];
@@ -94,7 +98,7 @@ export async function updatePatient(id, { name, email, phone, birthDate, address
         name = $2,
         email = $3,
         phone = $4,
-        birth_date = $5,
+        "birthDate" = $5,
         address = $6
       WHERE id = $1
       RETURNING
@@ -102,9 +106,9 @@ export async function updatePatient(id, { name, email, phone, birthDate, address
         name,
         email,
         phone,
-        birth_date AS "birthDate",
+        "birthDate",
         address,
-        created_at AS "createdAt"
+        "createdAt"
     `,
     [id, name, email || null, phone || null, birthDate || null, address || null]
   );

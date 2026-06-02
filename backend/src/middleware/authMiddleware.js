@@ -56,18 +56,31 @@ export async function authenticateOptional(req, _res, next) {
   }
 }
 
-export function authorizeRoles(allowedRoles) {
-  return (req, _res, next) => {
-    if (!req.user) {
-      next(new ApiError(401, "Authentication required."));
-      return;
+
+export const authorizeRoles = (...allowedRoles) => {
+  // O .flat() garante que, seja array ou não, tudo vire uma lista simples
+  const roles = allowedRoles.flat();
+
+  return (req, res, next) => {
+    if (!req.user || !req.user.role) {
+      return res.status(403).json({ error: 'Acesso negado. Usuário ou permissão não identificados.' });
     }
 
-    if (!allowedRoles.includes(req.user.role)) {
-      next(new ApiError(403, "You do not have permission to access this resource."));
-      return;
+    // O nosso dicionário de cargos!
+    const roleMap = {
+      1: 'ADMIN',
+      2: 'EMPLOYEE', // ou outro nome que o seu sistema usar para a role 2
+    };
+
+    // Traduz o número (1) para o texto ('ADMIN')
+    const userRoleString = roleMap[req.user.role] || req.user.role;
+
+    // Se a lista não tiver o número 1 E não tiver a palavra 'ADMIN', bloqueia!
+    if (!roles.includes(req.user.role) && !roles.includes(userRoleString)) {
+      return res.status(403).json({ error: 'Acesso negado. Você não tem permissão para esta ação.' });
     }
 
+    // Se chegou aqui, a catraca abre!
     next();
   };
-}
+};
