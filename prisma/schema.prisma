@@ -8,29 +8,31 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  name          String
-  email         String    @unique
-  passwordHash  String
-  role          Int       @default(2)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Int      @default(2)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  appointments Appointment[]
+  appointments     Appointment[]
+  appointmentLinks AppointmentLink[]
 
   @@map("users")
 }
 
 model Patient {
-  id         String   @id @default(cuid())
-  name       String
-  email      String?
-  phone      String?
-  birthDate  DateTime?
-  address    String?
-  createdAt  DateTime @default(now())
+  id        String    @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  birthDate DateTime?
+  address   String?
+  createdAt DateTime  @default(now())
 
-  appointments Appointment[]
+  appointments     Appointment[]
+  appointmentLinks AppointmentLink[]
 
   @@map("patients")
 }
@@ -43,21 +45,22 @@ model Service {
   durationMinutes Int?
   createdAt       DateTime @default(now())
 
-  appointments Appointment[]
+  appointments     Appointment[]
+  appointmentLinks AppointmentLink[]
 
   @@map("services")
 }
 
 model Appointment {
-  id             String   @id @default(cuid())
-  patientId      String
-  serviceId      Int
-  userId         Int?
+  id              String   @id @default(cuid())
+  patientId       String
+  serviceId       Int
+  userId          Int?
   appointmentDate DateTime
   appointmentTime String
-  status         String?
-  notes          String?
-  createdAt      DateTime @default(now())
+  status          String?
+  notes           String?
+  createdAt       DateTime @default(now())
 
   patient Patient @relation(fields: [patientId], references: [id])
   service Service @relation(fields: [serviceId], references: [id])
@@ -67,16 +70,16 @@ model Appointment {
 }
 
 model AppointmentLink {
-  id        String   @id @default(uuid())
-  token     String   @unique
+  id        String    @id @default(uuid())
+  token     String    @unique
   patientId String?
   serviceId Int?
   expiresAt DateTime?
-  used      Boolean  @default(false)
-  active    Boolean  @default(true)
+  used      Boolean   @default(false)
+  active    Boolean   @default(true)
   config    Json?
   createdBy Int?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   patient Patient? @relation(fields: [patientId], references: [id])
   service Service? @relation(fields: [serviceId], references: [id])
@@ -84,4 +87,3 @@ model AppointmentLink {
 
   @@map("appointment_links")
 }
-
