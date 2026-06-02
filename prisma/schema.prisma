@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -10,4 +5,84 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String
+  email         String    @unique
+  passwordHash  String
+  role          Int       @default(2)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  appointments Appointment[]
+
+  @@map("users")
+}
+
+model Patient {
+  id         String   @id @default(cuid())
+  name       String
+  email      String?
+  phone      String?
+  birthDate  DateTime?
+  address    String?
+  createdAt  DateTime @default(now())
+
+  appointments Appointment[]
+
+  @@map("patients")
+}
+
+model Service {
+  id              Int      @id @default(autoincrement())
+  name            String
+  description     String?
+  price           Float
+  durationMinutes Int?
+  createdAt       DateTime @default(now())
+
+  appointments Appointment[]
+
+  @@map("services")
+}
+
+model Appointment {
+  id             String   @id @default(cuid())
+  patientId      String
+  serviceId      Int
+  userId         Int?
+  appointmentDate DateTime
+  appointmentTime String
+  status         String?
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id])
+  service Service @relation(fields: [serviceId], references: [id])
+  user    User?   @relation(fields: [userId], references: [id])
+
+  @@map("appointments")
+}
+
+model AppointmentLink {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  patientId String?
+  serviceId Int?
+  expiresAt DateTime?
+  used      Boolean  @default(false)
+  active    Boolean  @default(true)
+  config    Json?
+  createdBy Int?
+  createdAt DateTime @default(now())
+
+  patient Patient? @relation(fields: [patientId], references: [id])
+  service Service? @relation(fields: [serviceId], references: [id])
+  creator User?    @relation(fields: [createdBy], references: [id])
+
+  @@map("appointment_links")
+}
+

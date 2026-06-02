@@ -4,8 +4,9 @@ export function Modal({ open, title, subtitle, children, onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 px-4 py-6 backdrop-blur-sm">
-      <div className="panel-border glass-panel max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[28px] p-6">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/70 px-3 py-3 backdrop-blur-sm md:items-center md:px-4 md:py-6">
+      <button type="button" aria-label="Fechar modal" className="absolute inset-0 cursor-default" onClick={onClose} />
+      <div className="panel-border glass-panel relative max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-[28px] p-5 md:p-6">
         <div className="mb-6 flex items-start justify-between gap-4">
           <div>
             <h2 className="fancy-title text-2xl font-semibold text-white">{title}</h2>

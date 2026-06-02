@@ -4,5 +4,6 @@ export class ApiError extends Error {
     this.name = "ApiError";
     this.statusCode = statusCode;
     this.details = details;
+    this.isOperational = true;
   }
 }

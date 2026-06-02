@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { asyncHandler } from "../lib/asyncHandler.js";
 import { getPatient, getPatients, postPatient, putPatient } from "../controllers/patientsController.js";
+import { authenticate, authorizeRoles } from "../middleware/authMiddleware.js";
 
 export const patientsRouter = Router();
 
+patientsRouter.use(authenticate, authorizeRoles([1, 2]));
 patientsRouter.get("/", asyncHandler(getPatients));
 patientsRouter.post("/", asyncHandler(postPatient));
 patientsRouter.get("/:id", asyncHandler(getPatient));

@@ -1,0 +1,154 @@
+const medicalRecordsStorageKey = "clinic-dashboard-demo.medical-records";
+
+const recordTypeOptions = [
+  { value: "fisioterapeutica", label: "Avaliacao Fisioterapeutica" },
+  { value: "osteopatia", label: "Osteopatia" },
+  { value: "pelvica", label: "Pelvica" },
+  { value: "atm", label: "ATM" },
+  { value: "vestibular", label: "Vestibular" },
+  { value: "funcional", label: "Funcional" },
+  { value: "evolucao", label: "Evolucao de Atendimento" }
+];
+
+const dynamicFieldsByType = {
+  fisioterapeutica: [
+    { name: "mainComplaint", label: "Queixa principal", type: "textarea" },
+    { name: "history", label: "Historico", type: "textarea" },
+    { name: "diagnosis", label: "Diagnostico", type: "textarea" },
+    { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
+  ],
+  osteopatia: [
+    { name: "mainComplaint", label: "Queixa principal", type: "textarea" },
+    { name: "structuralFindings", label: "Achados estruturais", type: "textarea" },
+    { name: "osteopathicDiagnosis", label: "Diagnostico osteopatico", type: "textarea" },
+    { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
+  ],
+  pelvica: [
+    { name: "mainComplaint", label: "Queixa principal", type: "textarea" },
+    { name: "symptoms", label: "Sintomas", type: "textarea" },
+    { name: "assessmentFindings", label: "Achados da avaliacao", type: "textarea" },
+    { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
+  ],
+  atm: [
+    { name: "mainComplaint", label: "Queixa principal", type: "textarea" },
+    { name: "painPattern", label: "Padrao de dor", type: "textarea" },
+    { name: "mobility", label: "Mobilidade", type: "textarea" },
+    { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
+  ],
+  vestibular: [
+    { name: "mainComplaint", label: "Queixa principal", type: "textarea" },
+    { name: "symptoms", label: "Sintomas vestibulares", type: "textarea" },
+    { name: "tests", label: "Testes aplicados", type: "textarea" },
+    { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
+  ],
+  funcional: [
+    { name: "mainComplaint", label: "Objetivo funcional", type: "textarea" },
+    { name: "limitations", label: "Limitacoes", type: "textarea" },
+    { name: "assessmentFindings", label: "Achados", type: "textarea" },
+    { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
+  ],
+  evolucao: [
+    { name: "sessionDescription", label: "Descricao do atendimento", type: "textarea" },
+    { name: "observations", label: "Observacoes", type: "textarea" },
+    { name: "technicalBehavior", label: "Comportamento tecnico", type: "textarea" }
+  ]
+};
+
+const fieldLabels = Object.values(dynamicFieldsByType).reduce((accumulator, fields) => {
+  fields.forEach((field) => {
+    accumulator[field.name] = field.label;
+  });
+  return accumulator;
+}, {});
+
+function loadRecordsMap() {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
+  try {
+    return JSON.parse(window.localStorage.getItem(medicalRecordsStorageKey) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveRecordsMap(recordsMap) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.setItem(medicalRecordsStorageKey, JSON.stringify(recordsMap));
+}
+
+export function getMedicalRecordTypeOptions() {
+  return recordTypeOptions;
+}
+
+export function getMedicalRecordFieldsByType(recordType) {
+  return dynamicFieldsByType[recordType] || [];
+}
+
+export function getMedicalRecordTypeLabel(recordType) {
+  return recordTypeOptions.find((option) => option.value === recordType)?.label || recordType;
+}
+
+export function listMedicalRecords(patientId) {
+  const recordsMap = loadRecordsMap();
+  const records = recordsMap[String(patientId)] || [];
+
+  return [...records].sort((left, right) => new Date(right.date).getTime() - new Date(left.date).getTime());
+}
+
+export async function createMedicalRecord({ patientId, type, date, notes, data }) {
+  const recordsMap = loadRecordsMap();
+  const patientKey = String(patientId);
+  const currentRecords = recordsMap[patientKey] || [];
+
+  const nextRecord = {
+    id: `record-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+    patientId,
+    type,
+    date,
+    notes,
+    data,
+    createdAt: new Date().toISOString()
+  };
+
+  recordsMap[patientKey] = [nextRecord, ...currentRecords];
+  saveRecordsMap(recordsMap);
+
+  return nextRecord;
+}
+
+export function buildMedicalRecordSummary(record) {
+  const values = Object.values(record.data || {}).filter(Boolean);
+  if (values.length) {
+    return String(values[0]).slice(0, 160);
+  }
+
+  return record.notes || "Sem resumo disponivel.";
+}
+
+export function getMedicalRecordFieldLabel(fieldName) {
+  return fieldLabels[fieldName] || fieldName;
+}
+
+export function getMedicalRecordSections(record) {
+  const dynamicFields = getMedicalRecordFieldsByType(record.type);
+  const sections = dynamicFields
+    .map((field) => ({
+      title: field.label,
+      value: record.data?.[field.name] || ""
+    }))
+    .filter((section) => section.value);
+
+  if (record.notes) {
+    sections.push({
+      title: "Observacoes gerais",
+      value: record.notes
+    });
+  }
+
+  return sections;
+}

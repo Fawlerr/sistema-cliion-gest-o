@@ -8,12 +8,13 @@ import {
   postPublicAppointment,
   putAppointment
 } from "../controllers/appointmentsController.js";
+import { authenticate, authorizeRoles } from "../middleware/authMiddleware.js";
 
 export const appointmentsRouter = Router();
 
 appointmentsRouter.get("/availability", asyncHandler(getAppointmentsAvailability));
-appointmentsRouter.get("/", asyncHandler(getAppointments));
-appointmentsRouter.post("/", asyncHandler(postAppointment));
 appointmentsRouter.post("/public", asyncHandler(postPublicAppointment));
-appointmentsRouter.get("/:id", asyncHandler(getAppointment));
-appointmentsRouter.put("/:id", asyncHandler(putAppointment));
+appointmentsRouter.get("/", authenticate, authorizeRoles([1, 2]), asyncHandler(getAppointments));
+appointmentsRouter.post("/", authenticate, authorizeRoles([1, 2]), asyncHandler(postAppointment));
+appointmentsRouter.get("/:id", authenticate, authorizeRoles([1, 2]), asyncHandler(getAppointment));
+appointmentsRouter.put("/:id", authenticate, authorizeRoles([1, 2]), asyncHandler(putAppointment));

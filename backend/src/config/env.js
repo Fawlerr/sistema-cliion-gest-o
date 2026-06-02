@@ -87,22 +87,46 @@ function parseDatabaseUrl(connectionValue) {
 
 function buildDatabaseConfig(fileEnv) {
   const parsedUrlConfig = parseDatabaseUrl(process.env.DATABASE_URL || fileEnv.DATABASE_URL || "");
+  const sslValue = process.env.DB_SSL || fileEnv.DB_SSL || String(parsedUrlConfig?.ssl || "false");
 
   return {
-    host: process.env.DB_HOST || fileEnv.DB_HOST || parsedUrlConfig?.host || "127.0.0.1",
+    host: process.env.DB_HOST || fileEnv.DB_HOST || parsedUrlConfig?.host || "localhost",
     port: Number(process.env.DB_PORT || fileEnv.DB_PORT || parsedUrlConfig?.port || 5432),
     user: process.env.DB_USER || fileEnv.DB_USER || parsedUrlConfig?.user || "postgres",
     password: process.env.DB_PASSWORD || fileEnv.DB_PASSWORD || parsedUrlConfig?.password || "",
     database: process.env.DB_NAME || fileEnv.DB_NAME || parsedUrlConfig?.database || "postgres",
-    ssl: (process.env.DB_SSL || fileEnv.DB_SSL || String(parsedUrlConfig?.ssl || "false")) === "true"
+    ssl: sslValue === "true",
+    connectionString: process.env.DATABASE_URL || fileEnv.DATABASE_URL || "",
+    max: Number(process.env.DB_POOL_MAX || fileEnv.DB_POOL_MAX || 10),
+    idleTimeoutMs: Number(process.env.DB_IDLE_TIMEOUT_MS || fileEnv.DB_IDLE_TIMEOUT_MS || 30000),
+    connectionTimeoutMs: Number(process.env.DB_CONNECTION_TIMEOUT_MS || fileEnv.DB_CONNECTION_TIMEOUT_MS || 10000),
+    statementTimeoutMs: Number(process.env.DB_STATEMENT_TIMEOUT_MS || fileEnv.DB_STATEMENT_TIMEOUT_MS || 15000),
+    queryTimeoutMs: Number(process.env.DB_QUERY_TIMEOUT_MS || fileEnv.DB_QUERY_TIMEOUT_MS || 15000)
   };
 }
 
 const fileEnv = loadRootEnv();
 const db = buildDatabaseConfig(fileEnv);
+const allowedOrigins = (process.env.CORS_ORIGINS || fileEnv.CORS_ORIGINS || "https://cliion.cloud,https://www.cliion.cloud")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const frontendPublicUrl = process.env.FRONTEND_PUBLIC_URL || fileEnv.FRONTEND_PUBLIC_URL || "https://cliion.cloud";
 
 export const env = {
   nodeEnv: process.env.NODE_ENV || fileEnv.NODE_ENV || "development",
-  port: Number(process.env.PORT || fileEnv.PORT || 4000),
-  db
+  isProduction: (process.env.NODE_ENV || fileEnv.NODE_ENV || "development") === "production",
+  port: Number(process.env.PORT || fileEnv.PORT || 3000),
+  corsOrigins: allowedOrigins,
+  frontendPublicUrl,
+  trustProxy: process.env.TRUST_PROXY || fileEnv.TRUST_PROXY || "1",
+  db,
+  auth: {
+    jwtSecret: process.env.JWT_SECRET || fileEnv.JWT_SECRET || "change-this-jwt-secret",
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN || fileEnv.JWT_EXPIRES_IN || "7d"
+  },
+  rateLimit: {
+    windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS || fileEnv.RATE_LIMIT_WINDOW_MS || 15 * 60 * 1000),
+    max: Number(process.env.RATE_LIMIT_MAX || fileEnv.RATE_LIMIT_MAX || 300)
+  }
 };

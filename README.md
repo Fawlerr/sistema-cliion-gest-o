@@ -1,111 +1,171 @@
 # Cliion Dashboard
 
-Production-oriented clinic dashboard for the existing Cliion application. This version replaces the mock backend flow with a modular PostgreSQL API and adds a multi-page React dashboard for patients, appointments, services, payments, expenses, and aggregated KPIs.
+Dashboard clinico preparado para producao com backend Node.js/Express, frontend React/Vite e PostgreSQL, pronto para rodar em VPS Ubuntu com PM2 e Nginx no dominio `cliion.cloud`.
 
 ## Stack
 
 - Backend: Node.js, Express, `pg`
-- Frontend: React, Vite, Tailwind CSS, Recharts
-- Database: PostgreSQL
+- Frontend: React, Vite, Tailwind CSS
+- Banco: PostgreSQL
+- Produção: PM2 + Nginx + Certbot
 
-## Backend API
-
-Available endpoints:
-
-- `GET /api/dashboard`
-- `GET /api/users`
-- `GET /api/users/:id`
-- `GET /api/patients`
-- `GET /api/patients/:id`
-- `GET /api/services`
-- `GET /api/services/:id`
-- `GET /api/appointments`
-- `GET /api/appointments/:id`
-- `GET /api/payments`
-- `GET /api/payments/:id`
-- `GET /api/expenses`
-- `GET /api/expenses/:id`
-
-Backend folders:
+## Estrutura
 
 ```text
-backend/src/
-  config/
-  controllers/
-  db/
-  lib/
-  middleware/
-  routes/
-  services/
-  app.js
-  server.js
+backend/
+  src/
+    config/
+    controllers/
+    db/
+    lib/
+    middleware/
+    routes/
+    services/
+frontend/
+  src/
+deploy/
+  nginx/
+  scripts/
+ecosystem.config.cjs
+.env.example
 ```
 
-## Frontend
+## Variaveis de ambiente
 
-Implemented pages:
+Copie `.env.example` para `.env` e ajuste:
 
-- Dashboard
-- Patients
-- Appointments
-- Services
-- Payments
-- Expenses
+- `PORT=3000`
+- `FRONTEND_PUBLIC_URL=https://cliion.cloud`
+- `CORS_ORIGINS=https://cliion.cloud,https://www.cliion.cloud`
+- `JWT_SECRET=...`
+- `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
+- `VITE_API_URL=/api`
 
-Frontend folders:
+O backend tambem aceita `DATABASE_URL`, inclusive no formato `prisma+postgres://...`, mas em VPS o recomendado aqui e usar as variaveis explicitas de PostgreSQL.
 
-```text
-frontend/src/
-  components/
-  hooks/
-  lib/
-  pages/
-  App.jsx
-  index.css
-  main.jsx
-```
-
-## Environment
-
-Set `DATABASE_URL` to a valid PostgreSQL connection string.
-
-This code also supports the current Prisma local format used in the repo, such as `prisma+postgres://...`, and automatically resolves the underlying Postgres URL before connecting.
-
-Optional frontend env:
-
-- `VITE_API_URL=http://localhost:4000/api`
-
-## Run
-
-1. Install dependencies
+## Desenvolvimento local
 
 ```bash
 npm install
-```
-
-2. Make sure PostgreSQL is running and the existing clinic tables already exist:
-
-- `users`
-- `patients`
-- `services`
-- `appointments`
-- `payments`
-- `expenses`
-
-3. Start the app
-
-```bash
 npm run dev
 ```
 
-4. Open:
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:3000/api/health`
 
-- Frontend: [http://localhost:5173](http://localhost:5173)
-- API health: [http://localhost:4000/api/health](http://localhost:4000/api/health)
+## Build de producao
 
-## Notes
+```bash
+npm install
+npm run build --workspace frontend
+```
 
-- `GET /api/patients` supports `?search=...`
-- `GET /api/appointments` supports `?from=YYYY-MM-DD&to=YYYY-MM-DD&limit=200`
-- The dashboard KPIs and charts are calculated from live database rows, not mock data
-- Authentication is intentionally not included yet
+O frontend gera os arquivos estaticos em `frontend/dist`.
+
+## PM2
+
+1. Instale PM2 globalmente:
+
+```bash
+npm install -g pm2
+```
+
+2. Na pasta do projeto:
+
+```bash
+pm2 start ecosystem.config.cjs
+pm2 save
+pm2 startup
+```
+
+3. Comandos uteis:
+
+```bash
+pm2 list
+pm2 logs cliion-backend
+pm2 restart cliion-backend
+pm2 startOrReload ecosystem.config.cjs
+```
+
+## Nginx
+
+Arquivo de exemplo: [deploy/nginx/cliion.cloud.conf](/C:/Users/alvan/OneDrive/Documentos/programação/clinic-dashboard-demo/deploy/nginx/cliion.cloud.conf)
+
+Passos comuns no Ubuntu:
+
+```bash
+sudo cp deploy/nginx/cliion.cloud.conf /etc/nginx/sites-available/cliion.cloud
+sudo ln -s /etc/nginx/sites-available/cliion.cloud /etc/nginx/sites-enabled/cliion.cloud
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+## HTTPS com Certbot
+
+```bash
+sudo apt update
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d cliion.cloud -d www.cliion.cloud
+```
+
+Depois valide o renovador:
+
+```bash
+sudo systemctl status certbot.timer
+```
+
+## Deploy sugerido na VPS Ubuntu
+
+1. Instale dependencias base:
+
+```bash
+sudo apt update
+sudo apt install -y nginx postgresql postgresql-contrib git curl
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g pm2
+```
+
+2. Prepare a aplicacao:
+
+```bash
+sudo mkdir -p /var/www/cliion
+sudo chown -R $USER:$USER /var/www/cliion
+git clone <repo> /var/www/cliion
+cd /var/www/cliion
+cp .env.example .env
+```
+
+3. Configure o PostgreSQL:
+
+```bash
+sudo -u postgres psql
+CREATE DATABASE cliion;
+CREATE USER cliion_user WITH ENCRYPTED PASSWORD 'change-me';
+GRANT ALL PRIVILEGES ON DATABASE cliion TO cliion_user;
+\q
+```
+
+4. Ajuste o `.env`, depois rode:
+
+```bash
+npm ci
+npm run build --workspace frontend
+pm2 start ecosystem.config.cjs
+```
+
+5. Configure Nginx e HTTPS.
+
+## Endpoint de saude
+
+- `GET /api/health`
+
+Resposta:
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-05-13T00:00:00.000Z",
+  "environment": "production"
+}
+```

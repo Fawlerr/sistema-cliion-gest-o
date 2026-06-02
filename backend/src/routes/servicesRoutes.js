@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { asyncHandler } from "../lib/asyncHandler.js";
 import { getService, getServices, postService, putService } from "../controllers/servicesController.js";
+import { authenticate, authorizeRoles } from "../middleware/authMiddleware.js";
 
 export const servicesRouter = Router();
 
 servicesRouter.get("/", asyncHandler(getServices));
-servicesRouter.post("/", asyncHandler(postService));
 servicesRouter.get("/:id", asyncHandler(getService));
-servicesRouter.put("/:id", asyncHandler(putService));
+servicesRouter.post("/", authenticate, authorizeRoles([1]), asyncHandler(postService));
+servicesRouter.put("/:id", authenticate, authorizeRoles([1]), asyncHandler(putService));

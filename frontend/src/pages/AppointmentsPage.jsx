@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Pencil, PlusCircle } from "lucide-react";
+import { Link2, Pencil, PlusCircle } from "lucide-react";
 import { useApi } from "../hooks/useApi";
 import { apiRequest, getCollection } from "../lib/api";
 import { formatDateForInput, formatDateTime } from "../lib/formatters";
@@ -8,6 +8,7 @@ import { EmptyState } from "../components/EmptyState";
 import { EntityCard } from "../components/EntityCard";
 import { ErrorState } from "../components/ErrorState";
 import { FormField } from "../components/FormField";
+import { GenerateLinkModal } from "../components/GenerateLinkModal";
 import { LoadingState } from "../components/LoadingState";
 import { Modal } from "../components/Modal";
 import { SectionToolbar } from "../components/SectionToolbar";
@@ -27,6 +28,7 @@ function buildInitialForm() {
 
 export function AppointmentsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
   const [form, setForm] = useState(buildInitialForm());
   const [submitError, setSubmitError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -35,6 +37,7 @@ export function AppointmentsPage() {
   const patients = useApi((signal) => getCollection("/patients", { signal }), []);
   const services = useApi((signal) => getCollection("/services", { signal }), []);
   const users = useApi((signal) => getCollection("/users", { signal }), []);
+  const links = useApi((signal) => getCollection("/appointment-links", { signal }), []);
 
   const appointmentCards = useMemo(() => appointments.data?.data || [], [appointments.data]);
 
@@ -73,8 +76,8 @@ export function AppointmentsPage() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setIsSaving(true);
     setSubmitError("");
+    setIsSaving(true);
 
     try {
       const payload = {
@@ -87,19 +90,9 @@ export function AppointmentsPage() {
         notes: form.notes
       };
 
-      let response;
-
-      if (form.id) {
-        response = await apiRequest(`/appointments/${form.id}`, {
-          method: "PUT",
-          body: payload
-        });
-      } else {
-        response = await apiRequest("/appointments", {
-          method: "POST",
-          body: payload
-        });
-      }
+      const response = form.id
+        ? await apiRequest(`/appointments/${form.id}`, { method: "PUT", body: payload })
+        : await apiRequest("/appointments", { method: "POST", body: payload });
 
       const savedAppointment = response.data;
 
@@ -109,13 +102,12 @@ export function AppointmentsPage() {
         }
 
         const exists = current.data.some((appointment) => appointment.id === savedAppointment.id);
-        const nextData = exists
-          ? current.data.map((appointment) => (appointment.id === savedAppointment.id ? savedAppointment : appointment))
-          : [savedAppointment, ...current.data];
 
         return {
           ...current,
-          data: nextData,
+          data: exists
+            ? current.data.map((appointment) => (appointment.id === savedAppointment.id ? savedAppointment : appointment))
+            : [savedAppointment, ...current.data],
           meta: {
             ...current.meta,
             count: exists ? current.meta.count : current.meta.count + 1
@@ -132,28 +124,38 @@ export function AppointmentsPage() {
     }
   }
 
-  if (appointments.isLoading || patients.isLoading || services.isLoading || users.isLoading) {
+  if (appointments.isLoading || patients.isLoading || services.isLoading || users.isLoading || links.isLoading) {
     return <LoadingState label="Carregando agendamentos..." />;
   }
 
-  if (appointments.error || patients.error || services.error || users.error) {
-    return <ErrorState message={appointments.error || patients.error || services.error || users.error} />;
+  if (appointments.error || patients.error || services.error || users.error || links.error) {
+    return <ErrorState message={appointments.error || patients.error || services.error || users.error || links.error} />;
   }
 
   return (
     <div className="space-y-6">
       <SectionToolbar
         title="Agendamentos"
-        subtitle={`${appointments.data.meta.count} agendamentos carregados com suporte a criacao e edicao.`}
+        subtitle={`${appointments.data.meta.count} agendamentos carregados com suporte a criacao, edicao e links publicos controlados.`}
         actions={
-          <button
-            type="button"
-            onClick={openCreateModal}
-            className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--accent)] px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
-          >
-            <PlusCircle size={18} />
-            Adicionar agendamento
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={openCreateModal}
+              className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--accent)] px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
+            >
+              <PlusCircle size={18} />
+              Adicionar agendamento
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsLinkModalOpen(true)}
+              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:from-emerald-600 hover:to-teal-700"
+            >
+              <Link2 size={18} />
+              Gerar link publico
+            </button>
+          </>
         }
       />
 
@@ -206,7 +208,9 @@ export function AppointmentsPage() {
               >
                 <option value="">Selecione</option>
                 {patients.data.data.map((patient) => (
-                  <option key={patient.id} value={patient.id}>{patient.name}</option>
+                  <option key={patient.id} value={patient.id}>
+                    {patient.name}
+                  </option>
                 ))}
               </select>
             </FormField>
@@ -220,7 +224,9 @@ export function AppointmentsPage() {
               >
                 <option value="">Selecione</option>
                 {services.data.data.map((service) => (
-                  <option key={service.id} value={service.id}>{service.name}</option>
+                  <option key={service.id} value={service.id}>
+                    {service.name}
+                  </option>
                 ))}
               </select>
             </FormField>
@@ -234,7 +240,9 @@ export function AppointmentsPage() {
               >
                 <option value="">Selecione</option>
                 {users.data.data.map((user) => (
-                  <option key={user.id} value={user.id}>{user.name}</option>
+                  <option key={user.id} value={user.id}>
+                    {user.name}
+                  </option>
                 ))}
               </select>
             </FormField>
@@ -277,7 +285,7 @@ export function AppointmentsPage() {
 
           <FormField label="Observacoes">
             <textarea
-              rows={3}
+              rows={4}
               value={form.notes}
               onChange={(event) => updateField("notes", event.target.value)}
               className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
@@ -297,6 +305,14 @@ export function AppointmentsPage() {
           </div>
         </form>
       </Modal>
+
+      <GenerateLinkModal
+        open={isLinkModalOpen}
+        onClose={() => setIsLinkModalOpen(false)}
+        patients={patients.data?.data || []}
+        services={services.data?.data || []}
+        onSuccess={() => links.refresh()}
+      />
     </div>
   );
 }

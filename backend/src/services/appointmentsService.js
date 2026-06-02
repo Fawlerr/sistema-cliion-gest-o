@@ -15,11 +15,11 @@ const appointmentSelect = `
     a.created_at AS "createdAt",
     p.name AS "patientName",
     s.name AS "serviceName",
-    u.name AS "userName"
+    COALESCE(u.name, CONCAT('Profissional #', a.user_id::text)) AS "userName"
   FROM appointments a
   INNER JOIN patients p ON p.id = a.patient_id
   INNER JOIN services s ON s.id = a.service_id
-  INNER JOIN users u ON u.id = a.user_id
+  LEFT JOIN users u ON u.id::text = a.user_id::text
 `;
 
 const workingHours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
@@ -181,25 +181,29 @@ async function ensurePublicSlotAvailable(appointmentDate, appointmentTime, db) {
 async function getDefaultPublicUserId(db) {
   const result = await db.query(
     `
-      SELECT id
-      FROM users
-      ORDER BY created_at ASC, id ASC
+      SELECT user_id AS id
+      FROM appointments
+      WHERE user_id IS NOT NULL
+      GROUP BY user_id
+      ORDER BY user_id ASC
       LIMIT 1
     `
   );
 
-  if (!result.rowCount) {
-    throw new ApiError(409, "No professionals are available for booking.");
-  }
-
-  return result.rows[0].id;
+  return result.rowCount ? result.rows[0].id : 1;
 }
 
-export async function createPublicAppointment({ patientName, email, phone, serviceId, appointmentDate, appointmentTime, notes }) {
-  const client = await pool.connect();
+export async function createPublicAppointment(
+  { patientName, email, phone, serviceId, appointmentDate, appointmentTime, notes },
+  existingClient = null
+) {
+  const client = existingClient || (await pool.connect());
+  const shouldManageTransaction = !existingClient;
 
   try {
-    await client.query("BEGIN");
+    if (shouldManageTransaction) {
+      await client.query("BEGIN");
+    }
     await ensureServiceExists(serviceId, client);
     const normalizedTime = validateWorkingHour(appointmentTime);
     await ensurePublicSlotAvailable(appointmentDate, normalizedTime, client);
@@ -227,12 +231,18 @@ export async function createPublicAppointment({ patientName, email, phone, servi
       [patient.id, serviceId, userId, appointmentDate, normalizedTime, "pending", notes || null]
     );
 
-    await client.query("COMMIT");
+    if (shouldManageTransaction) {
+      await client.query("COMMIT");
+    }
     return getAppointmentById(insertResult.rows[0].id);
   } catch (error) {
-    await client.query("ROLLBACK");
+    if (shouldManageTransaction) {
+      await client.query("ROLLBACK");
+    }
     throw error;
   } finally {
-    client.release();
+    if (shouldManageTransaction) {
+      client.release();
+    }
   }
 }
