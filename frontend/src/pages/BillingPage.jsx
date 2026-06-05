@@ -142,7 +142,7 @@ export function BillingPage() {
       closeModal();
       billing.refresh();
     } catch (error) {
-      setSubmitError(error.message || "Nao foi possivel salvar a entrada.");
+      setSubmitError(error.message || "Não foi possível salvar a entrada.");
     } finally {
       setIsSaving(false);
     }
@@ -164,7 +164,7 @@ export function BillingPage() {
     <div className="space-y-6">
       <SectionToolbar
         title="Faturamento"
-        subtitle="Acompanhe receitas e despesas em um unico fluxo operacional."
+        subtitle="Acompanhe receitas e despesas em um único fluxo operacional."
         actions={
           <button
             type="button"
@@ -208,14 +208,14 @@ export function BillingPage() {
               }
             >
               <div className="space-y-2 text-sm text-[color:var(--text-soft)]">
-                {entry.method ? <p>Metodo: <span className="text-white">{entry.method}</span></p> : null}
+                {entry.method ? <p>Método: <span className="text-white">{entry.method}</span></p> : null}
                 {entry.appointmentId ? <p>Atendimento: <span className="text-white">#{entry.appointmentId}</span></p> : null}
               </div>
             </EntityCard>
           ))}
         </div>
       ) : (
-        <EmptyState title="Nenhum lancamento encontrado" description="Adicione um pagamento ou despesa para iniciar o faturamento." />
+        <EmptyState title="Nenhum lançamento encontrado" description="Adicione um pagamento ou despesa para iniciar o faturamento." />
       )}
 
       <Modal
@@ -269,14 +269,14 @@ export function BillingPage() {
               </FormField>
 
               <div className="grid gap-4 md:grid-cols-3">
-                <FormField label="Metodo">
+                <FormField label="Método">
                   <select
                     value={form.method}
                     onChange={(event) => updateField("method", event.target.value)}
                     className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
                   >
                     <option value="pix">Pix</option>
-                    <option value="card">Cartao</option>
+                    <option value="card">Cartão</option>
                     <option value="boleto">Boleto</option>
                     <option value="cash">Dinheiro</option>
                   </select>
@@ -305,7 +305,7 @@ export function BillingPage() {
             </>
           ) : (
             <>
-              <FormField label="Descricao">
+              <FormField label="Descrição">
                 <input
                   type="text"
                   value={form.description}
@@ -335,7 +335,7 @@ export function BillingPage() {
               disabled={isSaving}
               className="rounded-2xl bg-[color:var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
             >
-              {isSaving ? "Salvando..." : form.id ? "Salvar alteracoes" : "Salvar entrada"}
+              {isSaving ? "Salvando..." : form.id ? "Salvar alterações" : "Salvar entrada"}
             </button>
           </div>
         </form>

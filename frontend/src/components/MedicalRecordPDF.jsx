@@ -31,13 +31,13 @@ export function MedicalRecordPDF({ patient, record }) {
           <div>
             <p style={{ margin: 0, fontSize: "28px", fontWeight: 700, letterSpacing: "0.02em" }}>Cliion</p>
             <p style={{ margin: "8px 0 0", fontSize: "14px", color: "#475569" }}>
-              Documento clinico de prontuario
+              Documento clínico de prontuário
             </p>
           </div>
         </div>
 
         <div style={{ textAlign: "right", fontSize: "13px", lineHeight: 1.7, color: "#334155" }}>
-          <p style={{ margin: 0, fontWeight: 700 }}>Clinica Cliion</p>
+          <p style={{ margin: 0, fontWeight: 700 }}>Clínica Cliion</p>
           <p style={{ margin: 0 }}>Av. Central, 245, Sala 08</p>
           <p style={{ margin: 0 }}>Natal - RN</p>
           <p style={{ margin: 0 }}>(84) 99999-0000</p>
@@ -45,9 +45,9 @@ export function MedicalRecordPDF({ patient, record }) {
       </header>
 
       <section style={{ marginTop: "28px" }}>
-        <h1 style={{ margin: 0, fontSize: "26px", fontWeight: 700 }}>Prontuario do Paciente</h1>
+        <h1 style={{ margin: 0, fontSize: "26px", fontWeight: 700 }}>Prontuário do Paciente</h1>
         <p style={{ margin: "8px 0 0", fontSize: "14px", color: "#475569" }}>
-          Registro clinico exportado para acompanhamento, arquivo e compartilhamento profissional.
+          Registro clínico exportado para acompanhamento, arquivo e compartilhamento profissional.
         </p>
       </section>
 
@@ -76,7 +76,7 @@ export function MedicalRecordPDF({ patient, record }) {
 
           <div>
             <p style={{ margin: 0, fontSize: "12px", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#64748b" }}>
-              Informacoes do registro
+              Informações do registro
             </p>
             <p style={{ margin: "10px 0 0", fontSize: "14px", color: "#334155" }}>
               <strong>Data:</strong> {formatDate(record.date)}
@@ -107,7 +107,7 @@ export function MedicalRecordPDF({ patient, record }) {
             }}
           >
             <p style={{ margin: 0, fontSize: "12px", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", opacity: 0.86 }}>
-              Tipo de prontuario
+              Tipo de prontuário
             </p>
             <h2 style={{ margin: "10px 0 0", fontSize: "24px", fontWeight: 700 }}>
               {getMedicalRecordTypeLabel(record.type)}
@@ -147,7 +147,7 @@ export function MedicalRecordPDF({ patient, record }) {
               </div>
             ) : (
               <p style={{ margin: 0, fontSize: "14px", color: "#475569" }}>
-                Este prontuario ainda nao possui secoes preenchidas.
+                Este prontuário ainda não possui seções preenchidas.
               </p>
             )}
           </div>

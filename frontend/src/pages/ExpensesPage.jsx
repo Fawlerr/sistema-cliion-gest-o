@@ -29,7 +29,7 @@ export function ExpensesPage() {
     <div className="space-y-6">
       <section className="grid gap-4 md:grid-cols-2">
         <StatCard title="Total de despesas" value={total} type="currency" accent="from-rose-500 via-orange-400 to-amber-300" />
-        <StatCard title="Lancamentos de despesas" value={data.meta.count} accent="from-indigo-500 via-violet-500 to-sky-400" />
+        <StatCard title="Lançamentos de despesas" value={data.meta.count} accent="from-indigo-500 via-violet-500 to-sky-400" />
       </section>
 
       <Panel title="Despesas" subtitle="Custos operacionais carregados diretamente da tabela de despesas.">
@@ -38,13 +38,13 @@ export function ExpensesPage() {
           emptyState={
             <EmptyState
               title="Nenhuma despesa encontrada"
-              description="As despesas aparecerao aqui quando a clinica registrar gastos operacionais."
+              description="As despesas aparecerão aqui quando a clínica registrar gastos operacionais."
             />
           }
           columns={[
             {
               key: "description",
-              header: "Descricao",
+              header: "Descrição",
               render: (row) => <span className="font-semibold text-white">{row.description}</span>
             },
             {

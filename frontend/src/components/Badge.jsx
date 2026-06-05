@@ -12,7 +12,7 @@ const labels = {
   pending: "Pendente",
   confirmed: "Confirmado",
   canceled: "Cancelado",
-  completed: "Concluido",
+  completed: "Concluído",
   "sem status": "Sem status"
 };
 

@@ -27,7 +27,7 @@ const chartTheme = {
 export function ChartsSection({ charts }) {
   return (
     <div className="grid gap-6 xl:grid-cols-3">
-      <Panel title="Agenda da semana" subtitle="Evolucao do volume de atendimentos">
+      <Panel title="Agenda da semana" subtitle="Evolução do volume de atendimentos">
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={charts.appointmentsTrend}>
@@ -67,7 +67,7 @@ export function ChartsSection({ charts }) {
         </div>
       </Panel>
 
-      <Panel title="Distribuicao de servicos" subtitle="Tratamentos mais procurados">
+      <Panel title="Distribuição de serviços" subtitle="Tratamentos mais procurados">
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>

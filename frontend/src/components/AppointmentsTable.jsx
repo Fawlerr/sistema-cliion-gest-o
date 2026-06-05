@@ -15,7 +15,7 @@ export function AppointmentsTable({ appointments }) {
             <tr className="text-xs uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
               <th className="px-4">Paciente</th>
               <th className="px-4">Data</th>
-              <th className="px-4">Servico</th>
+              <th className="px-4">Serviço</th>
               <th className="px-4">Status</th>
             </tr>
           </thead>

@@ -193,7 +193,7 @@ export function PatientsPage({ patientId = null }) {
       closeModal();
       patients.refresh();
     } catch (error) {
-      setSubmitError(error.message || "Nao foi possivel salvar o paciente.");
+      setSubmitError(error.message || "Não foi possível salvar o paciente.");
     } finally {
       setIsSaving(false);
     }

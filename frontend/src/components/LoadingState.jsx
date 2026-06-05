@@ -1,4 +1,4 @@
-export function LoadingState({ label = "Carregando dados da clinica..." }) {
+export function LoadingState({ label = "Carregando dados da clínica..." }) {
   return (
     <div className="panel-border glass-panel flex min-h-[260px] items-center justify-center rounded-[28px] p-8">
       <div className="text-center">

@@ -55,13 +55,13 @@ export function PaymentsPage() {
           emptyState={
             <EmptyState
               title="Nenhum pagamento encontrado"
-              description="Conforme os pagamentos forem registrados no banco, eles aparecerao aqui com o contexto do atendimento."
+              description="Conforme os pagamentos forem registrados no banco, eles aparecerão aqui com o contexto do atendimento."
             />
           }
           columns={[
             {
               key: "appointmentId",
-              header: "Referencia do atendimento",
+              header: "Referência do atendimento",
               render: (row) => (
                 <div>
                   <p className="font-semibold text-white">#{row.appointmentId}</p>
@@ -76,7 +76,7 @@ export function PaymentsPage() {
             },
             {
               key: "method",
-              header: "Metodo",
+              header: "Método",
               render: (row) => <span className="capitalize text-white/90">{row.method}</span>
             },
             {
@@ -86,7 +86,7 @@ export function PaymentsPage() {
             },
             {
               key: "appointmentDate",
-              header: "Horario do servico",
+              header: "Horário do serviço",
               render: (row) => (
                 <div>
                   <p>{formatDateTime(row.appointmentDate, row.appointmentTime)}</p>

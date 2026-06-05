@@ -109,14 +109,14 @@ export function ServicesPage() {
       closeModal();
       services.refresh();
     } catch (error) {
-      setSubmitError(error.message || "Nao foi possivel salvar o servico.");
+      setSubmitError(error.message || "Não foi possível salvar o serviço.");
     } finally {
       setIsSaving(false);
     }
   }
 
   if (services.isLoading) {
-    return <LoadingState label="Carregando servicos..." />;
+    return <LoadingState label="Carregando serviços..." />;
   }
 
   if (services.error) {
@@ -126,8 +126,8 @@ export function ServicesPage() {
   return (
     <div className="space-y-6">
       <SectionToolbar
-        title="Servicos"
-        subtitle={`${services.data.meta.count} servicos disponiveis para cadastro e edicao.`}
+        title="Serviços"
+        subtitle={`${services.data.meta.count} serviços disponíveis para cadastro e edição.`}
         actions={
           <button
             type="button"
@@ -135,7 +135,7 @@ export function ServicesPage() {
             className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--accent)] px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
           >
             <PlusCircle size={18} />
-            Adicionar servico
+            Adicionar serviço
           </button>
         }
       />
@@ -146,10 +146,10 @@ export function ServicesPage() {
             <EntityCard
               key={service.id}
               title={service.name}
-              subtitle={service.description || "Sem descricao"}
+              subtitle={service.description || "Sem descrição"}
               meta={[
-                { label: "Preco", value: formatCurrency(service.price) },
-                { label: "Duracao", value: service.durationMinutes ? `${service.durationMinutes} min` : "-" }
+                { label: "Preço", value: formatCurrency(service.price) },
+                { label: "Duração", value: service.durationMinutes ? `${service.durationMinutes} min` : "-" }
               ]}
               actions={
                 <button
@@ -164,18 +164,18 @@ export function ServicesPage() {
           ))}
         </div>
       ) : (
-        <EmptyState title="Nenhum servico encontrado" description="Cadastre um servico para comecar a montar o catalogo da clinica." />
+        <EmptyState title="Nenhum serviço encontrado" description="Cadastre um serviço para começar a montar o catálogo da clínica." />
       )}
 
       <Modal
         open={isModalOpen}
-        title={form.id ? "Editar servico" : "Novo servico"}
-        subtitle="Mantenha o catalogo sempre atualizado com preco, duracao e descricao."
+        title={form.id ? "Editar serviço" : "Novo serviço"}
+        subtitle="Mantenha o catálogo sempre atualizado com preço, duração e descrição."
         onClose={closeModal}
       >
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="grid gap-4 md:grid-cols-2">
-            <FormField label="Nome do servico">
+            <FormField label="Nome do serviço">
               <input
                 type="text"
                 value={form.name}
@@ -185,7 +185,7 @@ export function ServicesPage() {
               />
             </FormField>
 
-            <FormField label="Preco">
+            <FormField label="Preço">
               <input
                 type="number"
                 step="0.01"
@@ -198,7 +198,7 @@ export function ServicesPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <FormField label="Duracao em minutos">
+            <FormField label="Duração em minutos">
               <input
                 type="number"
                 value={form.durationMinutes}
@@ -207,7 +207,7 @@ export function ServicesPage() {
               />
             </FormField>
 
-            <FormField label="Descricao">
+            <FormField label="Descrição">
               <input
                 type="text"
                 value={form.description}
@@ -225,7 +225,7 @@ export function ServicesPage() {
               disabled={isSaving}
               className="rounded-2xl bg-[color:var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
             >
-              {isSaving ? "Salvando..." : form.id ? "Salvar alteracoes" : "Criar servico"}
+              {isSaving ? "Salvando..." : form.id ? "Salvar alterações" : "Criar serviço"}
             </button>
           </div>
         </form>

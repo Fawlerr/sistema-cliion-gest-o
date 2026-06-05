@@ -6,8 +6,8 @@ import { formatDateTime } from "../lib/formatters";
 export function EvolutionTimeline({ entries }) {
   return (
     <Panel
-      title="Evolucao de atendimento"
-      subtitle="Linha do tempo clinica com foco em sessoes, observacoes e contexto de atendimento."
+      title="Evolução de atendimento"
+      subtitle="Linha do tempo clínica com foco em sessões, observações e contexto de atendimento."
     >
       {entries.length ? (
         <div className="space-y-4">
@@ -38,7 +38,7 @@ export function EvolutionTimeline({ entries }) {
                 <div className="mt-4 rounded-[18px] border border-white/8 bg-slate-950/22 px-4 py-3">
                   <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
                     <FileText size={12} />
-                    Observacoes
+                    Observações
                   </p>
                   <p className="mt-2 text-sm leading-7 text-slate-200/90">{entry.observations}</p>
                 </div>
@@ -48,8 +48,8 @@ export function EvolutionTimeline({ entries }) {
         </div>
       ) : (
         <EmptyState
-          title="Nenhuma evolucao registrada"
-          description="Quando os atendimentos e observacoes forem centralizados aqui, a linha do tempo exibira o historico cronologico do paciente."
+          title="Nenhuma evolução registrada"
+          description="Quando os atendimentos e observações forem centralizados aqui, a linha do tempo exibirá o histórico cronológico do paciente."
         />
       )}
     </Panel>

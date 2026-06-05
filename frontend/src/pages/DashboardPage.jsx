@@ -27,7 +27,7 @@ export function DashboardPage() {
   );
 
   if (isLoading) {
-    return <LoadingState label="Carregando KPIs e graficos do painel..." />;
+    return <LoadingState label="Carregando KPIs e gráficos do painel..." />;
   }
 
   if (error) {
@@ -46,22 +46,22 @@ export function DashboardPage() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <Panel title="Faturamento ao longo do tempo" subtitle="Pagamentos pagos agregados por mes a partir da tabela de pagamentos.">
+        <Panel title="Faturamento ao longo do tempo" subtitle="Pagamentos pagos agregados por mês a partir da tabela de pagamentos.">
           <RevenueChart data={charts.revenueTimeline} />
         </Panel>
 
-        <Panel title="Agendamentos por dia" subtitle="Volume diario de marcacoes nos ultimos 7 dias a partir da tabela de agendamentos.">
+        <Panel title="Agendamentos por dia" subtitle="Volume diário de marcações nos últimos 7 dias a partir da tabela de agendamentos.">
           <AppointmentsChart data={charts.appointmentsByDay} />
         </Panel>
       </section>
 
-      <Panel title="Proximos agendamentos" subtitle="Registros recentes com dados unidos de paciente, servico e profissional.">
+      <Panel title="Próximos agendamentos" subtitle="Registros recentes com dados unidos de paciente, serviço e profissional.">
         <DataTable
           rows={data.appointments}
           emptyState={
             <EmptyState
               title="Nenhum agendamento encontrado"
-              description="Quando houver agendamentos no banco, eles aparecerao aqui com paciente, servico e status."
+              description="Quando houver agendamentos no banco, eles aparecerão aqui com paciente, serviço e status."
             />
           }
           columns={[
@@ -77,12 +77,12 @@ export function DashboardPage() {
             },
             {
               key: "serviceName",
-              header: "Servico",
+              header: "Serviço",
               render: (row) => <span className="text-white/90">{row.serviceName}</span>
             },
             {
               key: "appointmentDate",
-              header: "Horario",
+              header: "Horário",
               render: (row) => formatDateTime(row.appointmentDate, row.appointmentTime)
             },
             {
@@ -92,7 +92,7 @@ export function DashboardPage() {
             },
             {
               key: "notes",
-              header: "Observacoes",
+              header: "Observações",
               render: (row) => row.notes || "-"
             }
           ]}

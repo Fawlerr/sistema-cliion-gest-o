@@ -47,7 +47,7 @@ export function MedicalRecordsSection({ patientId, patientName, patient, records
       onRecordsChange((current) => [createdRecord, ...current]);
       setOpen(false);
     } catch (error) {
-      setSubmitError(error.message || "Nao foi possivel salvar o prontuario.");
+      setSubmitError(error.message || "Não foi possível salvar o prontuário.");
     } finally {
       setIsSaving(false);
     }
@@ -91,8 +91,8 @@ export function MedicalRecordsSection({ patientId, patientName, patient, records
   return (
     <div className="space-y-5">
       <Panel
-        title="Prontuarios"
-        subtitle={`Todos os registros clinicos de ${patientName} concentrados em uma lista unica, com o tipo escolhido dentro do formulario.`}
+        title="Prontuários"
+        subtitle={`Todos os registros clínicos de ${patientName} concentrados em uma lista única, com o tipo escolhido dentro do formulário.`}
         actions={
           <button
             type="button"
@@ -100,7 +100,7 @@ export function MedicalRecordsSection({ patientId, patientName, patient, records
             className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--accent)] px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
           >
             <PlusCircle size={16} />
-            Novo prontuario
+            Novo prontuário
           </button>
         }
       >
@@ -130,7 +130,7 @@ export function MedicalRecordsSection({ patientId, patientName, patient, records
                 {record.notes ? (
                   <div className="mt-4 rounded-[18px] border border-white/8 bg-slate-950/20 px-4 py-3">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
-                      Observacoes gerais
+                      Observações gerais
                     </p>
                     <p className="mt-2 text-sm leading-7 text-slate-200/90">{record.notes}</p>
                   </div>
@@ -160,8 +160,8 @@ export function MedicalRecordsSection({ patientId, patientName, patient, records
           </div>
         ) : (
           <EmptyState
-            title="Nenhum prontuario registrado"
-            description="Crie o primeiro prontuario para centralizar avaliacoes, evolucoes e demais registros clinicos do paciente em um unico fluxo."
+            title="Nenhum prontuário registrado"
+            description="Crie o primeiro prontuário para centralizar avaliações, evoluções e demais registros clínicos do paciente em um único fluxo."
           />
         )}
       </Panel>

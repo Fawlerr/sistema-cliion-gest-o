@@ -1,37 +1,37 @@
 const medicalRecordsStorageKey = "clinic-dashboard-demo.medical-records";
 
 const recordTypeOptions = [
-  { value: "fisioterapeutica", label: "Avaliacao Fisioterapeutica" },
+  { value: "fisioterapeutica", label: "Avaliação Fisioterapêutica" },
   { value: "osteopatia", label: "Osteopatia" },
-  { value: "pelvica", label: "Pelvica" },
+  { value: "pelvica", label: "Pélvica" },
   { value: "atm", label: "ATM" },
   { value: "vestibular", label: "Vestibular" },
   { value: "funcional", label: "Funcional" },
-  { value: "evolucao", label: "Evolucao de Atendimento" }
+  { value: "evolucao", label: "Evolução de Atendimento" }
 ];
 
 const dynamicFieldsByType = {
   fisioterapeutica: [
     { name: "mainComplaint", label: "Queixa principal", type: "textarea" },
-    { name: "history", label: "Historico", type: "textarea" },
-    { name: "diagnosis", label: "Diagnostico", type: "textarea" },
+    { name: "history", label: "Histórico", type: "textarea" },
+    { name: "diagnosis", label: "Diagnóstico", type: "textarea" },
     { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
   ],
   osteopatia: [
     { name: "mainComplaint", label: "Queixa principal", type: "textarea" },
     { name: "structuralFindings", label: "Achados estruturais", type: "textarea" },
-    { name: "osteopathicDiagnosis", label: "Diagnostico osteopatico", type: "textarea" },
+    { name: "osteopathicDiagnosis", label: "Diagnóstico osteopático", type: "textarea" },
     { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
   ],
   pelvica: [
     { name: "mainComplaint", label: "Queixa principal", type: "textarea" },
     { name: "symptoms", label: "Sintomas", type: "textarea" },
-    { name: "assessmentFindings", label: "Achados da avaliacao", type: "textarea" },
+    { name: "assessmentFindings", label: "Achados da avaliação", type: "textarea" },
     { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
   ],
   atm: [
     { name: "mainComplaint", label: "Queixa principal", type: "textarea" },
-    { name: "painPattern", label: "Padrao de dor", type: "textarea" },
+    { name: "painPattern", label: "Padrão de dor", type: "textarea" },
     { name: "mobility", label: "Mobilidade", type: "textarea" },
     { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
   ],
@@ -43,14 +43,14 @@ const dynamicFieldsByType = {
   ],
   funcional: [
     { name: "mainComplaint", label: "Objetivo funcional", type: "textarea" },
-    { name: "limitations", label: "Limitacoes", type: "textarea" },
+    { name: "limitations", label: "Limitações", type: "textarea" },
     { name: "assessmentFindings", label: "Achados", type: "textarea" },
     { name: "treatmentPlan", label: "Plano de tratamento", type: "textarea" }
   ],
   evolucao: [
-    { name: "sessionDescription", label: "Descricao do atendimento", type: "textarea" },
-    { name: "observations", label: "Observacoes", type: "textarea" },
-    { name: "technicalBehavior", label: "Comportamento tecnico", type: "textarea" }
+    { name: "sessionDescription", label: "Descrição do atendimento", type: "textarea" },
+    { name: "observations", label: "Observações", type: "textarea" },
+    { name: "technicalBehavior", label: "Comportamento técnico", type: "textarea" }
   ]
 };
 
@@ -127,7 +127,7 @@ export function buildMedicalRecordSummary(record) {
     return String(values[0]).slice(0, 160);
   }
 
-  return record.notes || "Sem resumo disponivel.";
+  return record.notes || "Sem resumo disponível.";
 }
 
 export function getMedicalRecordFieldLabel(fieldName) {
@@ -145,7 +145,7 @@ export function getMedicalRecordSections(record) {
 
   if (record.notes) {
     sections.push({
-      title: "Observacoes gerais",
+      title: "Observações gerais",
       value: record.notes
     });
   }

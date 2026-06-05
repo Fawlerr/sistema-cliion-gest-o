@@ -30,7 +30,7 @@ export function PatientDetails({
     <div className="space-y-6">
       <Panel
         title={patient.name}
-        subtitle="Pagina individual do paciente com prontuarios, pagamentos, avaliacoes e historico preparado para evoluir para CRUD completo."
+        subtitle="Página individual do paciente com prontuários, pagamentos, avaliações e histórico preparado para evoluir para CRUD completo."
         actions={
           <button
             type="button"
@@ -68,9 +68,9 @@ export function PatientDetails({
                 <UserRound size={20} />
               </span>
               <div>
-                <p className="text-sm font-semibold text-white">Resumo rapido</p>
+                <p className="text-sm font-semibold text-white">Resumo rápido</p>
                 <p className="mt-2 text-sm leading-7 text-cyan-50/85">
-                  Use as abas abaixo para navegar entre prontuarios e pagamentos. O fluxo agora concentra os tipos clinicos dentro de um unico cadastro de prontuario.
+                  Use as abas abaixo para navegar entre prontuários e pagamentos. O fluxo agora concentra os tipos clínicos dentro de um único cadastro de prontuário.
                 </p>
               </div>
             </div>
@@ -95,23 +95,23 @@ export function PatientDetails({
       {activeTab === "payments" ? (
         <Panel
           title="Pagamentos do paciente"
-          subtitle="Recebimentos vinculados aos atendimentos desse paciente, com estrutura pronta para filtros e lancamentos futuros."
+          subtitle="Recebimentos vinculados aos atendimentos desse paciente, com estrutura pronta para filtros e lançamentos futuros."
         >
           <DataTable
             rows={payments}
             emptyState={
               <EmptyState
                 title="Nenhum pagamento encontrado"
-                description="Quando os atendimentos desse paciente tiverem registros financeiros, eles aparecerao aqui com status e contexto do servico."
+                description="Quando os atendimentos desse paciente tiverem registros financeiros, eles aparecerão aqui com status e contexto do serviço."
               />
             }
             columns={[
               {
                 key: "serviceName",
-                header: "Servico",
+                header: "Serviço",
                 render: (row) => (
                   <div>
-                    <p className="font-semibold text-white">{row.serviceName || "Servico nao informado"}</p>
+                    <p className="font-semibold text-white">{row.serviceName || "Serviço não informado"}</p>
                     <p className="mt-1 text-xs text-[color:var(--text-muted)]">{formatDate(row.appointmentDate)}</p>
                   </div>
                 )
@@ -123,7 +123,7 @@ export function PatientDetails({
               },
               {
                 key: "method",
-                header: "Metodo",
+                header: "Método",
                 render: (row) => row.method || "-"
               },
               {

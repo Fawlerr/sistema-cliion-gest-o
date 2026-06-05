@@ -18,7 +18,7 @@ export function Sidebar({ items, activePage, onChange, isOpen = false, onClose }
           <div className="mt-5 rounded-[24px] bg-[linear-gradient(145deg,rgba(20,184,166,0.18),rgba(56,189,248,0.12))] p-4">
             <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--text-muted)]">Cliion</p>
             <p className="mt-3 text-sm leading-6 text-[color:var(--text-soft)]">
-              Gestao clinica com dados operacionais em tempo real, fluxo de equipe focado e um painel profissional.
+              Gestão clínica com dados operacionais em tempo real, fluxo de equipe focado e um painel profissional.
             </p>
           </div>
         </div>

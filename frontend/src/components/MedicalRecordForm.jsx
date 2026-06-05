@@ -54,13 +54,13 @@ export function MedicalRecordForm({ open, onClose, onSubmit, isSaving, submitErr
   return (
     <Modal
       open={open}
-      title="Novo prontuario"
-      subtitle="Formulario unico e dinamico. O tipo selecionado define os campos especificos do registro."
+      title="Novo prontuário"
+      subtitle="Formulário único e dinâmico. O tipo selecionado define os campos específicos do registro."
       onClose={onClose}
     >
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div className="grid gap-4 md:grid-cols-2">
-          <FormField label="Tipo do prontuario">
+          <FormField label="Tipo do prontuário">
             <select
               value={form.type}
               onChange={(event) => handleTypeChange(event.target.value)}
@@ -87,7 +87,7 @@ export function MedicalRecordForm({ open, onClose, onSubmit, isSaving, submitErr
           </FormField>
         </div>
 
-        <FormField label="Observacoes gerais">
+        <FormField label="Observações gerais">
           <textarea
             rows={3}
             value={form.notes}
@@ -120,7 +120,7 @@ export function MedicalRecordForm({ open, onClose, onSubmit, isSaving, submitErr
           </div>
         ) : (
           <div className="rounded-[22px] border border-dashed border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-[color:var(--text-soft)]">
-            Selecione o tipo do prontuario para carregar os campos dinamicos.
+            Selecione o tipo do prontuário para carregar os campos dinâmicos.
           </div>
         )}
 
@@ -133,7 +133,7 @@ export function MedicalRecordForm({ open, onClose, onSubmit, isSaving, submitErr
             className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
           >
             <FilePlus2 size={16} />
-            {isSaving ? "Salvando..." : "Salvar prontuario"}
+            {isSaving ? "Salvando..." : "Salvar prontuário"}
           </button>
         </div>
       </form>

@@ -76,7 +76,7 @@ export function GenerateLinkModal({ open, onClose, onSuccess, patients = [], ser
     <Modal
       open={open}
       title="Gerar link de agendamento"
-      subtitle="Crie um link seguro com expiracao para o paciente reservar um horario diretamente."
+      subtitle="Crie um link seguro com expiração para o paciente reservar um horário diretamente."
       onClose={onClose}
     >
       <form className="space-y-4" onSubmit={handleSubmit}>
@@ -96,13 +96,13 @@ export function GenerateLinkModal({ open, onClose, onSuccess, patients = [], ser
             </select>
           </FormField>
 
-          <FormField label="Servico (opcional)">
+          <FormField label="Serviço (opcional)">
             <select
               value={form.serviceId}
               onChange={(event) => updateField("serviceId", event.target.value)}
               className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
             >
-              <option value="">Qualquer servico</option>
+              <option value="">Qualquer serviço</option>
               {services.map((service) => (
                 <option key={service.id} value={service.id}>
                   {service.name}
@@ -125,7 +125,7 @@ export function GenerateLinkModal({ open, onClose, onSuccess, patients = [], ser
             />
           </FormField>
 
-          <FormField label="Duracao do slot (min)">
+          <FormField label="Duração do slot (min)">
             <input
               type="number"
               min="15"
@@ -138,7 +138,7 @@ export function GenerateLinkModal({ open, onClose, onSuccess, patients = [], ser
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <FormField label="Horario inicial">
+          <FormField label="Horário inicial">
             <input
               type="time"
               value={form.startHour}
@@ -147,7 +147,7 @@ export function GenerateLinkModal({ open, onClose, onSuccess, patients = [], ser
             />
           </FormField>
 
-          <FormField label="Horario final">
+          <FormField label="Horário final">
             <input
               type="time"
               value={form.endHour}

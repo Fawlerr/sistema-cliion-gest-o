@@ -84,7 +84,7 @@ export function PublicBookingPage({ serviceId }) {
         }
 
         setAvailability({ date: form.appointmentDate, occupiedSlots: [] });
-        setAvailabilityError(error.message || "Nao foi possivel verificar os horarios disponiveis.");
+        setAvailabilityError(error.message || "Não foi possível verificar os horários disponíveis.");
       } finally {
         if (isActive) {
           setIsCheckingAvailability(false);
@@ -138,11 +138,11 @@ export function PublicBookingPage({ serviceId }) {
         }
       });
 
-      setSubmitSuccess("Agendamento enviado com sucesso. O horario ja foi reservado para a equipe da clinica.");
+      setSubmitSuccess("Agendamento enviado com sucesso. O horário já foi reservado para a equipe da clínica.");
       setForm(buildInitialForm());
       setAvailability({ date: "", occupiedSlots: [] });
     } catch (error) {
-      setSubmitError(error.message || "Nao foi possivel concluir seu agendamento.");
+      setSubmitError(error.message || "Não foi possível concluir seu agendamento.");
     } finally {
       setIsSaving(false);
     }
@@ -163,7 +163,7 @@ export function PublicBookingPage({ serviceId }) {
   if (services.isLoading) {
     return (
       <div className="min-h-screen px-4 py-6 md:px-6">
-        <LoadingState label="Carregando servico selecionado..." />
+        <LoadingState label="Carregando serviço selecionado..." />
       </div>
     );
   }
@@ -180,14 +180,14 @@ export function PublicBookingPage({ serviceId }) {
     return (
       <div className="min-h-screen bg-[linear-gradient(180deg,#f5efe4_0%,#f6f8fb_100%)] px-4 py-6 md:px-6">
         <div className="mx-auto max-w-4xl">
-          <ErrorState message="Servico nao encontrado para este agendamento." />
+          <ErrorState message="Serviço não encontrado para este agendamento." />
           <div className="mt-4">
             <button
               type="button"
               onClick={() => navigateTo("/")}
               className="rounded-full border border-slate-900/10 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
             >
-              Voltar para a pagina inicial
+              Voltar para a página inicial
             </button>
           </div>
         </div>
@@ -208,7 +208,7 @@ export function PublicBookingPage({ serviceId }) {
           </button>
 
           <a href="/admin" className="rounded-full border border-slate-900/10 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white">
-            Area administrativa
+            Área administrativa
           </a>
         </div>
       </header>
@@ -222,13 +222,13 @@ export function PublicBookingPage({ serviceId }) {
               className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200 transition hover:bg-white/10"
             >
               <ArrowLeft size={14} />
-              Voltar aos servicos
+              Voltar aos serviços
             </button>
 
-            <p className="mt-6 text-sm font-semibold uppercase tracking-[0.28em] text-teal-300">Servico selecionado</p>
+            <p className="mt-6 text-sm font-semibold uppercase tracking-[0.28em] text-teal-300">Serviço selecionado</p>
             <h1 className="mt-4 font-['Fraunces'] text-4xl font-semibold leading-tight">{selectedService.name}</h1>
             <p className="mt-4 text-base leading-7 text-slate-300">
-              {selectedService.description || "Nossa equipe vai conduzir esse atendimento com o mesmo cuidado da experiencia presencial."}
+              {selectedService.description || "Nossa equipe vai conduzir esse atendimento com o mesmo cuidado da experiência presencial."}
             </p>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2">
@@ -237,8 +237,8 @@ export function PublicBookingPage({ serviceId }) {
                 <p className="mt-3 text-3xl font-semibold">{formatCurrency(selectedService.price)}</p>
               </div>
               <div className="rounded-[24px] border border-white/10 bg-white/5 p-5">
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Duracao prevista</p>
-                <p className="mt-3 text-3xl font-semibold">{selectedService.durationMinutes ? `${selectedService.durationMinutes} min` : "Sob avaliacao"}</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Duração prevista</p>
+                <p className="mt-3 text-3xl font-semibold">{selectedService.durationMinutes ? `${selectedService.durationMinutes} min` : "Sob avaliação"}</p>
               </div>
             </div>
 
@@ -247,8 +247,8 @@ export function PublicBookingPage({ serviceId }) {
                 <div className="flex items-center gap-3">
                   <CalendarClock size={18} className="text-teal-300" />
                   <div>
-                    <p className="font-semibold">Horarios controlados</p>
-                    <p className="text-sm text-slate-300">Apenas slots entre 08:00 e 17:00 ficam disponiveis para selecao.</p>
+                    <p className="font-semibold">Horários controlados</p>
+                    <p className="text-sm text-slate-300">Apenas slots entre 08:00 e 17:00 ficam disponíveis para seleção.</p>
                   </div>
                 </div>
               </div>
@@ -256,8 +256,8 @@ export function PublicBookingPage({ serviceId }) {
                 <div className="flex items-center gap-3">
                   <ShieldAlert size={18} className="text-amber-300" />
                   <div>
-                    <p className="font-semibold">Sem conflito de horario</p>
-                    <p className="text-sm text-slate-300">O sistema consulta a agenda do dia e bloqueia horarios ocupados antes e durante o envio.</p>
+                    <p className="font-semibold">Sem conflito de horário</p>
+                    <p className="text-sm text-slate-300">O sistema consulta a agenda do dia e bloqueia horários ocupados antes e durante o envio.</p>
                   </div>
                 </div>
               </div>
@@ -265,8 +265,8 @@ export function PublicBookingPage({ serviceId }) {
                 <div className="flex items-center gap-3">
                   <CheckCircle2 size={18} className="text-emerald-300" />
                   <div>
-                    <p className="font-semibold">Atualizacao imediata no painel</p>
-                    <p className="text-sm text-slate-300">Assim que o agendamento entra, ele ja aparece para o time administrativo.</p>
+                    <p className="font-semibold">Atualização imediata no painel</p>
+                    <p className="text-sm text-slate-300">Assim que o agendamento entra, ele já aparece para o time administrativo.</p>
                   </div>
                 </div>
               </div>
@@ -275,8 +275,8 @@ export function PublicBookingPage({ serviceId }) {
 
           <section className="rounded-[36px] border border-slate-900/8 bg-white/92 p-6 shadow-[0_28px_70px_rgba(148,101,63,0.12)] md:p-8">
             <div className="mb-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.26em] text-teal-700">Finalize seu horario</p>
-              <h2 className="mt-3 font-['Fraunces'] text-4xl font-semibold text-slate-950">Preencha seus dados e escolha um slot disponivel.</h2>
+              <p className="text-sm font-semibold uppercase tracking-[0.26em] text-teal-700">Finalize seu horário</p>
+              <h2 className="mt-3 font-['Fraunces'] text-4xl font-semibold text-slate-950">Preencha seus dados e escolha um slot disponível.</h2>
             </div>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
@@ -327,8 +327,8 @@ export function PublicBookingPage({ serviceId }) {
               <div className="rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">Horarios disponiveis</p>
-                    <p className="text-sm text-slate-500">Selecione um slot entre 08:00 e 17:00. Horarios passados ou ocupados ficam bloqueados.</p>
+                    <p className="text-sm font-semibold text-slate-900">Horários disponíveis</p>
+                    <p className="text-sm text-slate-500">Selecione um slot entre 08:00 e 17:00. Horários passados ou ocupados ficam bloqueados.</p>
                   </div>
                   {isCheckingAvailability ? <p className="text-sm text-teal-700">Atualizando disponibilidade...</p> : null}
                 </div>
@@ -336,7 +336,7 @@ export function PublicBookingPage({ serviceId }) {
                 <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                   {slotStates.map((slot) => {
                     const isSelected = form.appointmentTime === slot.time;
-                    const statusLabel = slot.occupied ? "Indisponivel" : slot.past ? "Encerrado" : "Disponivel";
+                    const statusLabel = slot.occupied ? "Indisponível" : slot.past ? "Encerrado" : "Disponível";
 
                     return (
                       <button
@@ -377,7 +377,7 @@ export function PublicBookingPage({ serviceId }) {
               ) : null}
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-slate-500">Seu horario so sera enviado se ainda estiver livre no momento da confirmacao.</p>
+                <p className="text-sm text-slate-500">Seu horário só será enviado se ainda estiver livre no momento da confirmação.</p>
                 <button
                   type="submit"
                   disabled={isSaving || !form.appointmentTime}

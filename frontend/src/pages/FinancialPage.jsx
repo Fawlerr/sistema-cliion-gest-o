@@ -60,7 +60,7 @@ export function FinancialPage({ financial }) {
       </Panel>
 
       <div className="xl:col-span-2">
-        <Panel title="Tendencia de lucro" subtitle="Area de receita menos despesas">
+        <Panel title="Tendência de lucro" subtitle="Área de receita menos despesas">
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart

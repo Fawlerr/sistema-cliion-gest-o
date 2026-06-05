@@ -13,13 +13,13 @@ function UnauthorizedState() {
   return (
     <div className="min-h-screen px-4 py-6 md:px-6">
       <div className="mx-auto max-w-3xl space-y-4">
-        <ErrorState message="Seu perfil nao tem permissao para acessar esta area." />
+        <ErrorState message="Seu perfil não tem permissão para acessar esta área." />
         <button
           type="button"
           onClick={() => navigateTo("/")}
           className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-50"
         >
-          Voltar para a pagina inicial
+          Voltar para a página inicial
         </button>
       </div>
     </div>
@@ -69,7 +69,7 @@ export function ProtectedRoute({ roles = [], children, user: providedUser, redir
 
         clearAuthToken();
         setCurrentUser(null);
-        setError(loadError.message || "Nao foi possivel validar sua sessao.");
+        setError(loadError.message || "Não foi possível validar sua sessão.");
         navigateTo(redirectTo);
       } finally {
         if (isActive) {

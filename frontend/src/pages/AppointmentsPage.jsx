@@ -118,7 +118,7 @@ export function AppointmentsPage() {
       closeModal();
       appointments.refresh();
     } catch (error) {
-      setSubmitError(error.message || "Nao foi possivel salvar o agendamento.");
+      setSubmitError(error.message || "Não foi possível salvar o agendamento.");
     } finally {
       setIsSaving(false);
     }
@@ -136,7 +136,7 @@ export function AppointmentsPage() {
     <div className="space-y-6">
       <SectionToolbar
         title="Agendamentos"
-        subtitle={`${appointments.data.meta.count} agendamentos carregados com suporte a criacao, edicao e links publicos controlados.`}
+        subtitle={`${appointments.data.meta.count} agendamentos carregados com suporte a criação, edição e links públicos controlados.`}
         actions={
           <>
             <button
@@ -153,7 +153,7 @@ export function AppointmentsPage() {
               className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:from-emerald-600 hover:to-teal-700"
             >
               <Link2 size={18} />
-              Gerar link publico
+              Gerar link público
             </button>
           </>
         }
@@ -188,13 +188,13 @@ export function AppointmentsPage() {
           ))}
         </div>
       ) : (
-        <EmptyState title="Nenhum agendamento encontrado" description="Crie um novo agendamento para comecar a organizar a agenda." />
+        <EmptyState title="Nenhum agendamento encontrado" description="Crie um novo agendamento para começar a organizar a agenda." />
       )}
 
       <Modal
         open={isModalOpen}
         title={form.id ? "Editar agendamento" : "Novo agendamento"}
-        subtitle="Os dados serao persistidos diretamente na tabela de agendamentos."
+        subtitle="Os dados serão persistidos diretamente na tabela de agendamentos."
         onClose={closeModal}
       >
         <form className="space-y-4" onSubmit={handleSubmit}>
@@ -215,7 +215,7 @@ export function AppointmentsPage() {
               </select>
             </FormField>
 
-            <FormField label="Servico">
+            <FormField label="Serviço">
               <select
                 value={form.serviceId}
                 onChange={(event) => updateField("serviceId", event.target.value)}
@@ -277,13 +277,13 @@ export function AppointmentsPage() {
               >
                 <option value="confirmed">Confirmado</option>
                 <option value="pending">Pendente</option>
-                <option value="completed">Concluido</option>
+                <option value="completed">Concluído</option>
                 <option value="canceled">Cancelado</option>
               </select>
             </FormField>
           </div>
 
-          <FormField label="Observacoes">
+          <FormField label="Observações">
             <textarea
               rows={4}
               value={form.notes}
@@ -300,7 +300,7 @@ export function AppointmentsPage() {
               disabled={isSaving}
               className="rounded-2xl bg-[color:var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
             >
-              {isSaving ? "Salvando..." : form.id ? "Salvar alteracoes" : "Criar agendamento"}
+              {isSaving ? "Salvando..." : form.id ? "Salvar alterações" : "Criar agendamento"}
             </button>
           </div>
         </form>

@@ -93,7 +93,7 @@ export function PublicAppointmentLinkPage({ token }) {
         }
 
         setAvailability({ date: form.appointmentDate, availableSlots: [] });
-        setAvailabilityError(error.message || "Nao foi possivel verificar a disponibilidade.");
+        setAvailabilityError(error.message || "Não foi possível verificar a disponibilidade.");
       } finally {
         if (isActive) {
           setIsCheckingAvailability(false);
@@ -140,7 +140,7 @@ export function PublicAppointmentLinkPage({ token }) {
       setForm(buildInitialForm(linkedPatient));
       setAvailability({ date: "", availableSlots: [] });
     } catch (error) {
-      setSubmitError(error.message || "Nao foi possivel concluir seu agendamento.");
+      setSubmitError(error.message || "Não foi possível concluir seu agendamento.");
     } finally {
       setIsSaving(false);
     }
@@ -155,7 +155,7 @@ export function PublicAppointmentLinkPage({ token }) {
   if (link.isLoading || services.isLoading || patients.isLoading) {
     return (
       <div className="min-h-screen px-4 py-6 md:px-6">
-        <LoadingState label="Validando link e carregando configuracoes..." />
+        <LoadingState label="Validando link e carregando configurações..." />
       </div>
     );
   }
@@ -203,12 +203,12 @@ export function PublicAppointmentLinkPage({ token }) {
               {linkedService?.name || "Agendamento personalizado"}
             </h1>
             <p className="mt-4 text-base leading-7 text-slate-300">
-              Este link foi criado para oferecer uma reserva direta, com janela de horarios controlada e validade limitada.
+              Este link foi criado para oferecer uma reserva direta, com janela de horários controlada e validade limitada.
             </p>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2">
               <div className="rounded-[24px] border border-white/10 bg-white/5 p-5">
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Servico</p>
+                <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Serviço</p>
                 <p className="mt-3 text-2xl font-semibold">{linkedService?.name || "A definir"}</p>
                 <p className="mt-2 text-sm text-slate-300">
                   {linkedService ? formatCurrency(linkedService.price) : "Valor informado pela equipe"}
@@ -229,7 +229,7 @@ export function PublicAppointmentLinkPage({ token }) {
                   <CalendarClock size={18} className="text-teal-300" />
                   <div>
                     <p className="font-semibold">Disponibilidade real</p>
-                    <p className="text-sm text-slate-300">Os horarios livres sao carregados em tempo real para a data escolhida.</p>
+                    <p className="text-sm text-slate-300">Os horários livres são carregados em tempo real para a data escolhida.</p>
                   </div>
                 </div>
               </div>
@@ -238,7 +238,7 @@ export function PublicAppointmentLinkPage({ token }) {
                   <ShieldAlert size={18} className="text-amber-300" />
                   <div>
                     <p className="font-semibold">Link autenticado</p>
-                    <p className="text-sm text-slate-300">A reserva ocorre por token unico, com expiracao e uso controlados.</p>
+                    <p className="text-sm text-slate-300">A reserva ocorre por token único, com expiração e uso controlados.</p>
                   </div>
                 </div>
               </div>
@@ -246,7 +246,7 @@ export function PublicAppointmentLinkPage({ token }) {
                 <div className="flex items-center gap-3">
                   <CheckCircle2 size={18} className="text-emerald-300" />
                   <div>
-                    <p className="font-semibold">Confirmacao imediata</p>
+                    <p className="font-semibold">Confirmação imediata</p>
                     <p className="text-sm text-slate-300">Ao concluir, o agendamento entra direto no painel administrativo.</p>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export function PublicAppointmentLinkPage({ token }) {
 
           <section className="rounded-[36px] border border-slate-900/8 bg-white/92 p-6 shadow-[0_28px_70px_rgba(148,101,63,0.12)] md:p-8">
             <div className="mb-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.26em] text-teal-700">Escolha seu horario</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.26em] text-teal-700">Escolha seu horário</p>
               <h2 className="mt-3 font-['Fraunces'] text-4xl font-semibold text-slate-950">Finalize os dados para reservar pelo link seguro.</h2>
             </div>
 
@@ -308,8 +308,8 @@ export function PublicAppointmentLinkPage({ token }) {
               <div className="rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">Horarios disponiveis</p>
-                    <p className="text-sm text-slate-500">A janela abaixo respeita a configuracao e os horarios ja ocupados.</p>
+                    <p className="text-sm font-semibold text-slate-900">Horários disponíveis</p>
+                    <p className="text-sm text-slate-500">A janela abaixo respeita a configuração e os horários já ocupados.</p>
                   </div>
                   {isCheckingAvailability ? <p className="text-sm text-teal-700">Atualizando disponibilidade...</p> : null}
                 </div>
@@ -334,7 +334,7 @@ export function PublicAppointmentLinkPage({ token }) {
                       >
                         <p className="text-base font-semibold">{slot.time}</p>
                         <p className={`mt-1 text-xs ${isSelected ? "text-teal-50" : slot.disabled ? "text-slate-400" : "text-slate-500"}`}>
-                          {slot.past ? "Encerrado" : "Disponivel"}
+                          {slot.past ? "Encerrado" : "Disponível"}
                         </p>
                       </button>
                     );
@@ -343,7 +343,7 @@ export function PublicAppointmentLinkPage({ token }) {
 
                 {!slotStates.length && !isCheckingAvailability ? (
                   <div className="mt-4 rounded-[20px] border border-dashed border-slate-300 bg-white px-4 py-4 text-sm text-slate-500">
-                    Selecione uma data para visualizar os horarios liberados neste link.
+                    Selecione uma data para visualizar os horários liberados neste link.
                   </div>
                 ) : null}
 
@@ -365,7 +365,7 @@ export function PublicAppointmentLinkPage({ token }) {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2 text-sm text-slate-500">
                   <Link2 size={16} />
-                  <span>Link valido enquanto houver disponibilidade e dentro do prazo informado.</span>
+                  <span>Link válido enquanto houver disponibilidade e dentro do prazo informado.</span>
                 </div>
                 <button
                   type="submit"

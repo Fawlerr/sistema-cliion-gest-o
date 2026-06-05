@@ -1,5 +1,5 @@
 const tabs = [
-  { id: "records", label: "Prontuarios" },
+  { id: "records", label: "Prontuários" },
   { id: "payments", label: "Pagamentos" }
 ];
 

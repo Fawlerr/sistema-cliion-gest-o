@@ -91,7 +91,7 @@ export function AgendaPage() {
     <div className="flex h-[calc(100vh-210px)] min-h-[720px] flex-col gap-6">
       <SectionToolbar
         title="Agenda"
-        subtitle={`Semana de ${formatWeekRange(weekStart)} com ${enrichedAppointments.length} agendamentos distribuidos por dia e horario.`}
+        subtitle={`Semana de ${formatWeekRange(weekStart)} com ${enrichedAppointments.length} agendamentos distribuídos por dia e horário.`}
         actions={
           <div className="flex flex-wrap items-center gap-3">
             <button
@@ -115,7 +115,7 @@ export function AgendaPage() {
               onClick={() => setWeekOffset((current) => current + 1)}
               className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/10"
             >
-              Proxima semana
+              Próxima semana
               <ChevronRight size={16} />
             </button>
           </div>

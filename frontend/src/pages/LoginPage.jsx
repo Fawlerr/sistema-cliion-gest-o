@@ -36,7 +36,7 @@ export function LoginPage() {
       setAuthToken(response.data.token);
       navigateTo("/admin");
     } catch (submitError) {
-      setError(submitError.message || "Nao foi possivel entrar.");
+      setError(submitError.message || "Não foi possível entrar.");
     } finally {
       setIsSubmitting(false);
     }
@@ -46,9 +46,9 @@ export function LoginPage() {
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(43,210,255,0.16),transparent_28%),linear-gradient(160deg,#07111f_0%,#0c1c33_50%,#102542_100%)] px-4 py-10 text-white md:px-6">
       <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_460px] lg:items-center">
         <section className="space-y-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.32em] text-cyan-300">Area administrativa</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.32em] text-cyan-300">Área administrativa</p>
           <h1 className="max-w-3xl font-['Fraunces'] text-5xl font-semibold leading-tight text-white md:text-6xl">
-            Acesso seguro para a operacao da clinica.
+            Acesso seguro para a operação da clínica.
           </h1>
           <p className="max-w-2xl text-base leading-8 text-slate-200">
             Entre com seu e-mail e senha para acessar o painel, trabalhar com pacientes e agendamentos ou administrar o restante do sistema conforme seu perfil.
@@ -56,12 +56,12 @@ export function LoginPage() {
 
           <div className="grid gap-4 md:grid-cols-2">
             <article className="rounded-[28px] border border-white/10 bg-white/5 p-5">
-              <p className="text-sm font-semibold text-white">JWT com expiracao</p>
-              <p className="mt-2 text-sm leading-7 text-slate-300">A sessao usa token com validade e validacao no backend antes de liberar a area interna.</p>
+              <p className="text-sm font-semibold text-white">JWT com expiração</p>
+              <p className="mt-2 text-sm leading-7 text-slate-300">A sessão usa token com validade e validação no backend antes de liberar a área interna.</p>
             </article>
             <article className="rounded-[28px] border border-white/10 bg-white/5 p-5">
               <p className="text-sm font-semibold text-white">Acesso por papel</p>
-              <p className="mt-2 text-sm leading-7 text-slate-300">Administradores e funcionarios enxergam somente as areas permitidas para cada role.</p>
+              <p className="mt-2 text-sm leading-7 text-slate-300">Administradores e funcionários enxergam somente as áreas permitidas para cada role.</p>
             </article>
           </div>
         </section>

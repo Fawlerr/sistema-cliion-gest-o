@@ -28,7 +28,7 @@ export function MedicalRecordPreview({ open, onClose, patient, record }) {
           ))
         ) : (
           <div className="rounded-[22px] border border-dashed border-white/10 bg-white/[0.03] px-4 py-5 text-sm text-[color:var(--text-soft)]">
-            Nenhum conteudo detalhado registrado neste prontuario.
+            Nenhum conteúdo detalhado registrado neste prontuário.
           </div>
         )}
       </div>

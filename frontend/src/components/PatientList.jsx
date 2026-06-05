@@ -28,7 +28,7 @@ export function PatientList({
     <div className="space-y-6">
       <SectionToolbar
         title="Pacientes"
-        subtitle={`${patients.length} pacientes carregados com acesso rapido a detalhes, prontuarios, pagamentos e avaliacoes.`}
+        subtitle={`${patients.length} pacientes carregados com acesso rápido a detalhes, prontuários, pagamentos e avaliações.`}
         actions={
           <>
             <form onSubmit={onSearchSubmit} className="flex w-full max-w-xl flex-col gap-3 sm:flex-row">
@@ -81,7 +81,7 @@ export function PatientList({
                 </button>
               }
             >
-              <p className="text-sm text-[color:var(--text-soft)]">{patient.address || "Endereco nao informado."}</p>
+              <p className="text-sm text-[color:var(--text-soft)]">{patient.address || "Endereço não informado."}</p>
 
               <div className="mt-5 grid gap-3">
                 <button
@@ -99,7 +99,7 @@ export function PatientList({
                     className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--text-soft)] transition hover:bg-white/[0.08] hover:text-white"
                   >
                     <ClipboardList size={14} />
-                    Prontuarios
+                    Prontuários
                   </button>
                   <button
                     type="button"
@@ -121,7 +121,7 @@ export function PatientList({
       <Modal
         open={isModalOpen}
         title={form.id ? "Editar paciente" : "Novo paciente"}
-        subtitle="Os dados informados serao gravados diretamente no PostgreSQL."
+        subtitle="Os dados informados serão gravados diretamente no PostgreSQL."
         onClose={onCloseModal}
       >
         <form className="space-y-4" onSubmit={onSubmit}>
@@ -177,7 +177,7 @@ export function PatientList({
             />
           </FormField>
 
-          <FormField label="Endereco">
+          <FormField label="Endereço">
             <textarea
               value={form.address}
               onChange={(event) => onUpdateField("address", event.target.value)}
@@ -194,7 +194,7 @@ export function PatientList({
               disabled={isSaving}
               className="rounded-2xl bg-[color:var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
             >
-              {isSaving ? "Salvando..." : form.id ? "Salvar alteracoes" : "Criar paciente"}
+              {isSaving ? "Salvando..." : form.id ? "Salvar alterações" : "Criar paciente"}
             </button>
           </div>
         </form>

@@ -13,18 +13,18 @@ const heroImageUrl = "https://images.unsplash.com/photo-1584515933487-779824d293
 
 const highlights = [
   {
-    title: "Agendamento sem friccao",
-    description: "Selecione o servico e veja os horarios realmente disponiveis antes de confirmar.",
+    title: "Agendamento sem fricção",
+    description: "Selecione o serviço e veja os horários realmente disponíveis antes de confirmar.",
     icon: CalendarDays
   },
   {
     title: "Fluxo integrado",
-    description: "Cada reserva vai direto para a agenda administrativa da clinica.",
+    description: "Cada reserva vai direto para a agenda administrativa da clínica.",
     icon: Sparkles
   },
   {
     title: "Cuidado profissional",
-    description: "Uma experiencia digital pensada para transmitir seguranca e acolhimento.",
+    description: "Uma experiência digital pensada para transmitir segurança e acolhimento.",
     icon: CheckCircle2
   }
 ];
@@ -96,7 +96,7 @@ export function PublicLandingPage() {
   if (services.isLoading) {
     return (
       <div className="min-h-screen px-4 py-6 md:px-6">
-        <LoadingState label="Carregando servicos da clinica..." />
+        <LoadingState label="Carregando serviços da clínica..." />
       </div>
     );
   }
@@ -119,15 +119,15 @@ export function PublicLandingPage() {
             <img src={logo} alt="Clinic Dashboard Demo" className="h-12 w-auto object-contain" />
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-teal-300">Clinic Dashboard Demo</p>
-              <p className="text-sm text-slate-300">Clinica moderna com experiencia digital</p>
+              <p className="text-sm text-slate-300">Clínica moderna com experiência digital</p>
             </div>
           </a>
 
           <nav className="hidden items-center gap-6 text-sm font-medium text-slate-200 md:flex">
-            <a href="#services" className="transition hover:text-white">Servicos</a>
-            <a href="#experience" className="transition hover:text-white">Experiencia</a>
+            <a href="#services" className="transition hover:text-white">Serviços</a>
+            <a href="#experience" className="transition hover:text-white">Experiência</a>
             <a href="/admin" className="rounded-full border border-white/10 px-4 py-2 transition hover:bg-white/10">
-              Area administrativa
+              Área administrativa
             </a>
           </nav>
         </div>
@@ -146,12 +146,12 @@ export function PublicLandingPage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.22),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.18),transparent_30%)]" />
           <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-center px-4 py-24 md:px-6 lg:px-8">
             <div className="max-w-4xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.34em] text-teal-300">Saude, acolhimento e agenda inteligente</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.34em] text-teal-300">Saúde, acolhimento e agenda inteligente</p>
               <h1 className="mt-6 text-center font-['Fraunces'] text-5xl font-semibold leading-[1.02] text-white md:text-left md:text-7xl">
-                Cuidado clinico com uma jornada digital fluida do primeiro clique ao horario confirmado.
+                Cuidado clínico com uma jornada digital fluida do primeiro clique ao horário confirmado.
               </h1>
               <p className="mx-auto mt-6 max-w-3xl text-center text-lg leading-8 text-slate-200 md:mx-0 md:text-left">
-                Um site pensado para transmitir confianca, apresentar seus servicos e transformar interesse em agendamentos reais com disponibilidade validada em tempo real.
+                Um site pensado para transmitir confiança, apresentar seus serviços e transformar interesse em agendamentos reais com disponibilidade validada em tempo real.
               </p>
 
               <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row md:items-start">
@@ -166,7 +166,7 @@ export function PublicLandingPage() {
                   href="#experience"
                   className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-white/15"
                 >
-                  Conhecer a experiencia
+                  Conhecer a experiência
                 </a>
               </div>
             </div>
@@ -175,9 +175,9 @@ export function PublicLandingPage() {
 
         <PublicSection
           id="services"
-          eyebrow="Servicos"
+          eyebrow="Serviços"
           title="Escolha o atendimento ideal e siga para um agendamento dedicado."
-          description="Cada card leva para uma pagina de reserva especifica do servico, com detalhes claros e slots disponiveis em vez de digitacao manual de horario."
+          description="Cada card leva para uma página de reserva específica do serviço, com detalhes claros e slots disponíveis em vez de digitação manual de horário."
         >
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {serviceCards.length ? (
@@ -195,13 +195,13 @@ export function PublicLandingPage() {
 
                   <h3 className="mt-5 text-2xl font-semibold text-slate-950">{service.name}</h3>
                   <p className="mt-3 min-h-[96px] text-sm leading-7 text-slate-600">
-                    {service.description || "Descricao em atualizacao. A pagina de reserva apresenta esse servico em um fluxo claro, rapido e responsivo."}
+                    {service.description || "Descrição em atualização. A página de reserva apresenta esse serviço em um fluxo claro, rápido e responsivo."}
                   </p>
 
                   <div className="mt-6 flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm text-slate-500">
                       <Clock3 size={16} />
-                      <span>{service.durationMinutes ? `${service.durationMinutes} min` : "Duracao ajustada pela equipe"}</span>
+                      <span>{service.durationMinutes ? `${service.durationMinutes} min` : "Duração ajustada pela equipe"}</span>
                     </div>
                     <button
                       type="button"
@@ -215,16 +215,16 @@ export function PublicLandingPage() {
                 </article>
               ))
             ) : (
-              <EmptyState title="Nenhum servico disponivel" description="A clinica ainda nao publicou servicos para agendamento online." />
+              <EmptyState title="Nenhum serviço disponível" description="A clínica ainda não publicou serviços para agendamento online." />
             )}
           </div>
         </PublicSection>
 
         <PublicSection
           id="experience"
-          eyebrow="Experiencia"
-          title="Uma home que conduz a decisao com clareza, ritmo e confianca."
-          description="O parallax conecta as secoes visualmente, enquanto o fluxo de reserva reduz atrito com disponibilidade verificavel e estados de interface objetivos."
+          eyebrow="Experiência"
+          title="Uma home que conduz a decisão com clareza, ritmo e confiança."
+          description="O parallax conecta as seções visualmente, enquanto o fluxo de reserva reduz atrito com disponibilidade verificável e estados de interface objetivos."
         >
           <div className="grid gap-5 md:grid-cols-3">
             {highlights.map((item) => {
@@ -245,9 +245,9 @@ export function PublicLandingPage() {
             <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-teal-300">Fluxo de reserva</p>
-                <h3 className="mt-4 font-['Fraunces'] text-4xl font-semibold">Escolha o servico, visualize os slots livres e confirme com seguranca.</h3>
+                <h3 className="mt-4 font-['Fraunces'] text-4xl font-semibold">Escolha o serviço, visualize os slots livres e confirme com segurança.</h3>
                 <p className="mt-4 max-w-3xl text-base leading-7 text-slate-300">
-                  O sistema consulta a agenda do dia, bloqueia horarios ocupados, restringe o expediente entre 08:00 e 17:00 e impede reservas no passado antes mesmo do envio ao backend.
+                  O sistema consulta a agenda do dia, bloqueia horários ocupados, restringe o expediente entre 08:00 e 17:00 e impede reservas no passado antes mesmo do envio ao backend.
                 </p>
               </div>
 
