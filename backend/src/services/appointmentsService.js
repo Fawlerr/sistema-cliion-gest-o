@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { pool, query } from "../db/pool.js";
 import { ApiError } from "../lib/apiError.js";
 import { createPatientRecord, findPatientForPublicBooking } from "./patientsService.js";
@@ -76,13 +77,14 @@ export async function getAppointmentById(id) {
 }
 
 export async function createAppointment({ patientId, serviceId, userId, appointmentDate, appointmentTime, status, notes }) {
+  const appointmentId = crypto.randomUUID();
   const result = await query(
     `
-      INSERT INTO appointments ("patientId", "serviceId", "userId", "appointmentDate", "appointmentTime", status, notes)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO appointments (id, "patientId", "serviceId", "userId", "appointmentDate", "appointmentTime", status, notes)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id
     `,
-    [patientId, serviceId, userId, appointmentDate, appointmentTime, status || null, notes || null]
+    [appointmentId, patientId, serviceId, userId, appointmentDate, appointmentTime, status || null, notes || null]
   );
 
   return getAppointmentById(result.rows[0].id);
@@ -140,7 +142,7 @@ export function validateWorkingHour(appointmentTime) {
 export async function listOccupiedSlotsByDate(date, db = { query }) {
   const result = await db.query(
     `
-      SELECT DISTINCT TO_CHAR("appointmentTime", 'HH24:MI') AS time
+      SELECT DISTINCT LEFT("appointmentTime"::text, 5) AS time
       FROM appointments
       WHERE "appointmentDate" = $1
         AND COALESCE(LOWER(status), '') <> 'canceled'
@@ -166,7 +168,7 @@ async function ensurePublicSlotAvailable(appointmentDate, appointmentTime, db) {
       SELECT 1
       FROM appointments
       WHERE "appointmentDate" = $1
-        AND "appointmentTime" = $2
+        AND LEFT("appointmentTime"::text, 5) = $2
         AND COALESCE(LOWER(status), '') <> 'canceled'
       LIMIT 1
     `,
@@ -181,16 +183,14 @@ async function ensurePublicSlotAvailable(appointmentDate, appointmentTime, db) {
 async function getDefaultPublicUserId(db) {
   const result = await db.query(
     `
-      SELECT "userId" AS id
-      FROM appointments
-      WHERE "userId" IS NOT NULL
-      GROUP BY "userId"
-      ORDER BY "userId" ASC
+      SELECT id
+      FROM users
+      ORDER BY id ASC
       LIMIT 1
     `
   );
 
-  return result.rowCount ? result.rows[0].id : 1;
+  return result.rowCount ? result.rows[0].id : null;
 }
 
 export async function createPublicAppointment(
@@ -222,13 +222,14 @@ export async function createPublicAppointment(
       );
 
     const userId = await getDefaultPublicUserId(client);
+    const appointmentId = crypto.randomUUID();
     const insertResult = await client.query(
       `
-        INSERT INTO appointments ("patientId", "serviceId", "userId", "appointmentDate", "appointmentTime", status, notes)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO appointments (id, "patientId", "serviceId", "userId", "appointmentDate", "appointmentTime", status, notes)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING id
       `,
-      [patient.id, serviceId, userId, appointmentDate, normalizedTime, "pending", notes || null]
+      [appointmentId, patient.id, serviceId, userId, appointmentDate, normalizedTime, "pending", notes || null]
     );
 
     if (shouldManageTransaction) {

@@ -11,16 +11,16 @@ export async function listBillingEntries() {
         CONCAT('Pagamento de ', COALESCE(p.name, 'Paciente sem nome'), ' - ', COALESCE(s.name, 'Servico')),
         'Pagamento'
       ) AS description,
-      COALESCE(pay.paid_at::date, a.appointment_date, pay.created_at::date) AS "entryDate",
-      pay.paid_at AS "paidAt",
+      COALESCE(pay."paidAt"::date, a."appointmentDate", pay."createdAt"::date) AS "entryDate",
+      pay."paidAt",
       NULL::date AS "expenseDate",
       pay.method,
       pay.status,
-      pay.appointment_id AS "appointmentId"
+      pay."appointmentId"
     FROM payments pay
-    LEFT JOIN appointments a ON a.id = pay.appointment_id
-    LEFT JOIN patients p ON p.id = a.patient_id
-    LEFT JOIN services s ON s.id = a.service_id
+    LEFT JOIN appointments a ON a.id = pay."appointmentId"
+    LEFT JOIN patients p ON p.id = a."patientId"
+    LEFT JOIN services s ON s.id = a."serviceId"
 
     UNION ALL
 
@@ -30,9 +30,9 @@ export async function listBillingEntries() {
       e.id,
       e.amount,
       e.description,
-      e.expense_date AS "entryDate",
+      e."expenseDate" AS "entryDate",
       NULL::timestamp AS "paidAt",
-      e.expense_date AS "expenseDate",
+      e."expenseDate",
       NULL AS method,
       NULL AS status,
       NULL AS "appointmentId"

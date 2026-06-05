@@ -11,9 +11,9 @@ function validatePaymentPayload(payload) {
 
   const appointmentId = payload.appointmentId === undefined || payload.appointmentId === null || payload.appointmentId === ""
     ? null
-    : Number.parseInt(payload.appointmentId, 10);
+    : String(payload.appointmentId).trim();
 
-  if (appointmentId !== null && (!Number.isInteger(appointmentId) || appointmentId <= 0)) {
+  if (appointmentId !== null && !appointmentId) {
     throw new ApiError(400, "Invalid appointment for payment.");
   }
 

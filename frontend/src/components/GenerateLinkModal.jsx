@@ -96,13 +96,14 @@ export function GenerateLinkModal({ open, onClose, onSuccess, patients = [], ser
             </select>
           </FormField>
 
-          <FormField label="Serviço (opcional)">
+          <FormField label="Serviço">
             <select
               value={form.serviceId}
               onChange={(event) => updateField("serviceId", event.target.value)}
               className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+              required
             >
-              <option value="">Qualquer serviço</option>
+              <option value="">Selecione um serviço</option>
               {services.map((service) => (
                 <option key={service.id} value={service.id}>
                   {service.name}

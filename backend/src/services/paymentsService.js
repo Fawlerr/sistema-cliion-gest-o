@@ -4,26 +4,26 @@ import { ApiError } from "../lib/apiError.js";
 const paymentSelect = `
   SELECT
     pay.id,
-    pay.appointment_id AS "appointmentId",
+    pay."appointmentId",
     pay.amount,
     pay.method,
     pay.status,
-    pay.paid_at AS "paidAt",
-    pay.created_at AS "createdAt",
-    a.appointment_date AS "appointmentDate",
-    a.appointment_time AS "appointmentTime",
+    pay."paidAt",
+    pay."createdAt",
+    a."appointmentDate",
+    a."appointmentTime",
     p.id AS "patientId",
     p.name AS "patientName",
     s.id AS "serviceId",
     s.name AS "serviceName"
   FROM payments pay
-  LEFT JOIN appointments a ON a.id = pay.appointment_id
-  LEFT JOIN patients p ON p.id = a.patient_id
-  LEFT JOIN services s ON s.id = a.service_id
+  LEFT JOIN appointments a ON a.id = pay."appointmentId"
+  LEFT JOIN patients p ON p.id = a."patientId"
+  LEFT JOIN services s ON s.id = a."serviceId"
 `;
 
 export async function listPayments() {
-  const result = await query(`${paymentSelect} ORDER BY pay.created_at DESC, pay.id DESC`);
+  const result = await query(`${paymentSelect} ORDER BY pay."createdAt" DESC, pay.id DESC`);
   return result.rows;
 }
 
@@ -40,7 +40,7 @@ export async function getPaymentById(id) {
 export async function createPayment({ appointmentId, amount, method, status, paidAt }) {
   const result = await query(
     `
-      INSERT INTO payments (appointment_id, amount, method, status, paid_at)
+      INSERT INTO payments ("appointmentId", amount, method, status, "paidAt")
       VALUES ($1, $2, $3, $4, $5)
       RETURNING id
     `,
@@ -55,11 +55,11 @@ export async function updatePayment(id, { appointmentId, amount, method, status,
     `
       UPDATE payments
       SET
-        appointment_id = $2,
+        "appointmentId" = $2,
         amount = $3,
         method = $4,
         status = $5,
-        paid_at = $6
+        "paidAt" = $6
       WHERE id = $1
       RETURNING id
     `,

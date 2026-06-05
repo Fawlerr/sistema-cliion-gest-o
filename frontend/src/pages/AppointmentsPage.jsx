@@ -81,7 +81,7 @@ export function AppointmentsPage() {
 
     try {
       const payload = {
-        patientId: Number(form.patientId),
+        patientId: form.patientId,
         serviceId: Number(form.serviceId),
         userId: Number(form.userId),
         appointmentDate: form.appointmentDate,

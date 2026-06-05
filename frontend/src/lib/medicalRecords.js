@@ -1,4 +1,4 @@
-const medicalRecordsStorageKey = "clinic-dashboard-demo.medical-records";
+import { apiRequest, getCollection } from "./api";
 
 const recordTypeOptions = [
   { value: "fisioterapeutica", label: "Avaliação Fisioterapêutica" },
@@ -61,26 +61,6 @@ const fieldLabels = Object.values(dynamicFieldsByType).reduce((accumulator, fiel
   return accumulator;
 }, {});
 
-function loadRecordsMap() {
-  if (typeof window === "undefined") {
-    return {};
-  }
-
-  try {
-    return JSON.parse(window.localStorage.getItem(medicalRecordsStorageKey) || "{}");
-  } catch {
-    return {};
-  }
-}
-
-function saveRecordsMap(recordsMap) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(medicalRecordsStorageKey, JSON.stringify(recordsMap));
-}
-
 export function getMedicalRecordTypeOptions() {
   return recordTypeOptions;
 }
@@ -93,32 +73,18 @@ export function getMedicalRecordTypeLabel(recordType) {
   return recordTypeOptions.find((option) => option.value === recordType)?.label || recordType;
 }
 
-export function listMedicalRecords(patientId) {
-  const recordsMap = loadRecordsMap();
-  const records = recordsMap[String(patientId)] || [];
-
-  return [...records].sort((left, right) => new Date(right.date).getTime() - new Date(left.date).getTime());
+export async function listMedicalRecords(patientId, options = {}) {
+  const records = await getCollection(`/patients/${patientId}/medical-records`, options);
+  return records.data;
 }
 
 export async function createMedicalRecord({ patientId, type, date, notes, data }) {
-  const recordsMap = loadRecordsMap();
-  const patientKey = String(patientId);
-  const currentRecords = recordsMap[patientKey] || [];
+  const payload = await apiRequest(`/patients/${patientId}/medical-records`, {
+    method: "POST",
+    body: { type, date, notes, data }
+  });
 
-  const nextRecord = {
-    id: `record-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
-    patientId,
-    type,
-    date,
-    notes,
-    data,
-    createdAt: new Date().toISOString()
-  };
-
-  recordsMap[patientKey] = [nextRecord, ...currentRecords];
-  saveRecordsMap(recordsMap);
-
-  return nextRecord;
+  return payload.data;
 }
 
 export function buildMedicalRecordSummary(record) {

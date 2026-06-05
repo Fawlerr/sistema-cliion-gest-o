@@ -15,7 +15,6 @@ enum Role {
 }
 
 model User {
-<<<<<<< HEAD
   id           Int      @id @default(autoincrement())
   name         String
   email        String   @unique
@@ -23,18 +22,9 @@ model User {
   role         Int      @default(2)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-=======
-  id            Int       @id @default(autoincrement())
-  name          String
-  email         String    @unique
-  passwordHash  String
-  role          Role      @default(RECEPTIONIST)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
->>>>>>> agents/add-role-enum-to-user-model
 
-  appointments     Appointment[]
-  appointmentLinks AppointmentLink[]
+  appointments       Appointment[]
+  appointmentLinks   AppointmentLink[]
 
   @@map("users")
 }
@@ -48,8 +38,9 @@ model Patient {
   address   String?
   createdAt DateTime  @default(now())
 
-  appointments     Appointment[]
-  appointmentLinks AppointmentLink[]
+  appointments       Appointment[]
+  appointmentLinks   AppointmentLink[]
+  medicalRecords     MedicalRecord[]
 
   @@map("patients")
 }
@@ -69,7 +60,7 @@ model Service {
 }
 
 model Appointment {
-  id              String   @id @default(cuid())
+  id              String   @id @default(uuid())
   patientId       String
   serviceId       Int
   userId          Int?
@@ -82,25 +73,64 @@ model Appointment {
   patient Patient @relation(fields: [patientId], references: [id])
   service Service @relation(fields: [serviceId], references: [id])
   user    User?   @relation(fields: [userId], references: [id])
+  payments Payment[]
 
   @@map("appointments")
 }
 
 model AppointmentLink {
-  id        String    @id @default(uuid())
+  id        String    @id @default(uuid()) @db.Uuid
   token     String    @unique
-  patientId String?
-  serviceId Int?
-  expiresAt DateTime?
+  patientId String?   @map("patient_id")
+  serviceId Int?      @map("service_id")
+  expiresAt DateTime? @map("expires_at")
   used      Boolean   @default(false)
   active    Boolean   @default(true)
   config    Json?
-  createdBy Int?
-  createdAt DateTime  @default(now())
+  createdBy Int?      @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
 
   patient Patient? @relation(fields: [patientId], references: [id])
   service Service? @relation(fields: [serviceId], references: [id])
   creator User?    @relation(fields: [createdBy], references: [id])
 
   @@map("appointment_links")
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  appointmentId String?
+  amount        Float
+  method        String?
+  status        String?
+  paidAt        DateTime?
+  createdAt     DateTime @default(now())
+
+  appointment Appointment? @relation(fields: [appointmentId], references: [id])
+
+  @@map("payments")
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  description String
+  amount      Float
+  expenseDate DateTime
+  createdAt   DateTime @default(now())
+
+  @@map("expenses")
+}
+
+model MedicalRecord {
+  id        String   @id
+  patientId String
+  type      String
+  date      DateTime
+  notes     String?
+  data      Json
+  createdAt DateTime @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id])
+
+  @@map("medical_records")
 }

@@ -6,13 +6,13 @@ const expenseSelect = `
     id,
     description,
     amount,
-    expense_date AS "expenseDate",
-    created_at AS "createdAt"
+    "expenseDate",
+    "createdAt"
   FROM expenses
 `;
 
 export async function listExpenses() {
-  const result = await query(`${expenseSelect} ORDER BY expense_date DESC, id DESC`);
+  const result = await query(`${expenseSelect} ORDER BY "expenseDate" DESC, id DESC`);
   return result.rows;
 }
 
@@ -29,14 +29,14 @@ export async function getExpenseById(id) {
 export async function createExpense({ description, amount, expenseDate }) {
   const result = await query(
     `
-      INSERT INTO expenses (description, amount, expense_date)
+      INSERT INTO expenses (description, amount, "expenseDate")
       VALUES ($1, $2, $3)
       RETURNING
         id,
         description,
         amount,
-        expense_date AS "expenseDate",
-        created_at AS "createdAt"
+        "expenseDate",
+        "createdAt"
     `,
     [description, amount, expenseDate]
   );
@@ -51,14 +51,14 @@ export async function updateExpense(id, { description, amount, expenseDate }) {
       SET
         description = $2,
         amount = $3,
-        expense_date = $4
+        "expenseDate" = $4
       WHERE id = $1
       RETURNING
         id,
         description,
         amount,
-        expense_date AS "expenseDate",
-        created_at AS "createdAt"
+        "expenseDate",
+        "createdAt"
     `,
     [id, description, amount, expenseDate]
   );

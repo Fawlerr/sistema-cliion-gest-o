@@ -10,12 +10,22 @@ import {
 import { ApiError } from "../lib/apiError.js";
 import { parseIdParam, parseOptionalDate, parseOptionalInteger } from "../lib/validators.js";
 
+function parseAppointmentIdParam(value) {
+  const appointmentId = String(value || "").trim();
+
+  if (!appointmentId) {
+    throw new ApiError(400, "Invalid appointment id.");
+  }
+
+  return appointmentId;
+}
+
 function validateAppointmentPayload(payload) {
-  const patientId = Number.parseInt(payload.patientId, 10);
+  const patientId = String(payload.patientId || "").trim();
   const serviceId = Number.parseInt(payload.serviceId, 10);
   const userId = Number.parseInt(payload.userId, 10);
 
-  if (!Number.isInteger(patientId) || patientId <= 0) {
+  if (!patientId) {
     throw new ApiError(400, "Invalid patient.");
   }
 
@@ -101,7 +111,7 @@ export async function getAppointments(req, res) {
 }
 
 export async function getAppointment(req, res) {
-  const appointmentId = parseIdParam(req.params.id, "appointment id");
+  const appointmentId = parseAppointmentIdParam(req.params.id);
   const appointment = await getAppointmentById(appointmentId);
   res.json({ data: appointment });
 }
@@ -136,7 +146,7 @@ export async function postPublicAppointment(req, res) {
 }
 
 export async function putAppointment(req, res) {
-  const appointmentId = parseIdParam(req.params.id, "appointment id");
+  const appointmentId = parseAppointmentIdParam(req.params.id);
   const appointment = await updateAppointment(appointmentId, validateAppointmentPayload(req.body));
   res.json({ data: appointment });
 }

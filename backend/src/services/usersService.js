@@ -7,12 +7,12 @@ const baseSelect = `
     name,
     email,
     role,
-    created_at AS "createdAt"
+    "createdAt"
   FROM users
 `;
 
 export async function listUsers() {
-  const result = await query(`${baseSelect} ORDER BY created_at DESC, id DESC`);
+  const result = await query(`${baseSelect} ORDER BY "createdAt" DESC, id DESC`);
   return result.rows;
 }
 

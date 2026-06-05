@@ -4,6 +4,8 @@ import { formatCurrency, formatDate, calculateAge } from "../lib/formatters";
 import { Badge } from "./Badge";
 import { DataTable } from "./DataTable";
 import { EmptyState } from "./EmptyState";
+import { ErrorState } from "./ErrorState";
+import { LoadingState } from "./LoadingState";
 import { MedicalRecordsSection } from "./MedicalRecordsSection";
 import { Panel } from "./Panel";
 import { PatientTabs } from "./PatientTabs";
@@ -16,14 +18,43 @@ export function PatientDetails({
   initialTab = "records"
 }) {
   const [activeTab, setActiveTab] = useState(initialTab);
-  const [medicalRecords, setMedicalRecords] = useState(() => listMedicalRecords(patient.id));
+  const [medicalRecords, setMedicalRecords] = useState([]);
+  const [isLoadingMedicalRecords, setIsLoadingMedicalRecords] = useState(true);
+  const [medicalRecordsError, setMedicalRecordsError] = useState("");
 
   useEffect(() => {
     setActiveTab(initialTab);
   }, [initialTab]);
 
   useEffect(() => {
-    setMedicalRecords(listMedicalRecords(patient.id));
+    let isActive = true;
+
+    async function loadMedicalRecords() {
+      setIsLoadingMedicalRecords(true);
+      setMedicalRecordsError("");
+
+      try {
+        const records = await listMedicalRecords(patient.id);
+
+        if (isActive) {
+          setMedicalRecords(records);
+        }
+      } catch (error) {
+        if (isActive) {
+          setMedicalRecordsError(error.message || "Não foi possível carregar os prontuários.");
+        }
+      } finally {
+        if (isActive) {
+          setIsLoadingMedicalRecords(false);
+        }
+      }
+    }
+
+    loadMedicalRecords();
+
+    return () => {
+      isActive = false;
+    };
   }, [patient.id]);
 
   return (
@@ -82,13 +113,17 @@ export function PatientDetails({
 
       {activeTab === "records" ? (
         <div className="space-y-6">
-          <MedicalRecordsSection
-            patientId={patient.id}
-            patientName={patient.name}
-            patient={patient}
-            records={medicalRecords}
-            onRecordsChange={setMedicalRecords}
-          />
+          {isLoadingMedicalRecords ? <LoadingState label="Carregando prontuários..." /> : null}
+          {medicalRecordsError ? <ErrorState message={medicalRecordsError} /> : null}
+          {!isLoadingMedicalRecords && !medicalRecordsError ? (
+            <MedicalRecordsSection
+              patientId={patient.id}
+              patientName={patient.name}
+              patient={patient}
+              records={medicalRecords}
+              onRecordsChange={setMedicalRecords}
+            />
+          ) : null}
         </div>
       ) : null}
 

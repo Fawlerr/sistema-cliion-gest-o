@@ -21,6 +21,10 @@ function validateCreatePayload(payload) {
   const serviceId = payload.serviceId ? Number(payload.serviceId) : null;
   const config = payload.config || {};
 
+  if (!serviceId) {
+    throw new ApiError(400, "serviceId is required");
+  }
+
   if (typeof config !== "object") {
     throw new ApiError(400, "config must be object");
   }

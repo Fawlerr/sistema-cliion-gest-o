@@ -1,6 +1,15 @@
 import { createPatient, getPatientById, listPatients, updatePatient } from "../services/patientsService.js";
 import { ApiError } from "../lib/apiError.js";
-import { parseIdParam } from "../lib/validators.js";
+
+function parsePatientIdParam(value) {
+  const patientId = String(value || "").trim();
+
+  if (!patientId) {
+    throw new ApiError(400, "Invalid patient id.");
+  }
+
+  return patientId;
+}
 
 function normalizeBirthDateFromPayload(payload) {
   if (payload.birthDate) {
@@ -45,7 +54,7 @@ export async function getPatients(req, res) {
 }
 
 export async function getPatient(req, res) {
-  const patientId = parseIdParam(req.params.id, "patient id");
+  const patientId = parsePatientIdParam(req.params.id);
   const patient = await getPatientById(patientId);
   res.json({ data: patient });
 }
@@ -56,7 +65,7 @@ export async function postPatient(req, res) {
 }
 
 export async function putPatient(req, res) {
-  const patientId = parseIdParam(req.params.id, "patient id");
+  const patientId = parsePatientIdParam(req.params.id);
   const patient = await updatePatient(patientId, validatePatientPayload(req.body));
   res.json({ data: patient });
 }
