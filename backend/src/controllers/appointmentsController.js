@@ -8,7 +8,7 @@ import {
   validateWorkingHour
 } from "../services/appointmentsService.js";
 import { ApiError } from "../lib/apiError.js";
-import { parseIdParam, parseOptionalDate, parseOptionalInteger } from "../lib/validators.js";
+import { parseOptionalDate, parseOptionalInteger } from "../lib/validators.js";
 
 function parseAppointmentIdParam(value) {
   const appointmentId = String(value || "").trim();
@@ -23,7 +23,7 @@ function parseAppointmentIdParam(value) {
 function validateAppointmentPayload(payload) {
   const patientId = String(payload.patientId || "").trim();
   const serviceId = Number.parseInt(payload.serviceId, 10);
-  const userId = Number.parseInt(payload.userId, 10);
+  const userId = String(payload.userId || "").trim();
 
   if (!patientId) {
     throw new ApiError(400, "Invalid patient.");
@@ -33,7 +33,7 @@ function validateAppointmentPayload(payload) {
     throw new ApiError(400, "Invalid service.");
   }
 
-  if (!Number.isInteger(userId) || userId <= 0) {
+  if (!userId) {
     throw new ApiError(400, "Invalid professional.");
   }
 

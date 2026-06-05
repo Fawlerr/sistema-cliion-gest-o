@@ -40,6 +40,8 @@ export async function ensureDatabaseSchema() {
 
   await query(`ALTER TABLE IF EXISTS appointments DROP CONSTRAINT IF EXISTS "appointments_patientId_fkey"`);
   await query(`ALTER TABLE IF EXISTS appointments DROP CONSTRAINT IF EXISTS appointments_patient_id_fkey`);
+  await query(`ALTER TABLE IF EXISTS appointments DROP CONSTRAINT IF EXISTS "appointments_userId_fkey"`);
+  await query(`ALTER TABLE IF EXISTS appointments DROP CONSTRAINT IF EXISTS appointments_user_id_fkey`);
   await query(`ALTER TABLE IF EXISTS medical_records DROP CONSTRAINT IF EXISTS "medical_records_patientId_fkey"`);
   await query(`ALTER TABLE IF EXISTS medical_records DROP CONSTRAINT IF EXISTS medical_records_patient_id_fkey`);
   await query(`ALTER TABLE IF EXISTS payments DROP CONSTRAINT IF EXISTS "payments_appointmentId_fkey"`);
@@ -101,7 +103,7 @@ export async function ensureDatabaseSchema() {
       id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
       "patientId" TEXT NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
       "serviceId" INTEGER NOT NULL REFERENCES services(id),
-      "userId" INTEGER REFERENCES users(id),
+      "userId" TEXT,
       "appointmentDate" DATE NOT NULL,
       "appointmentTime" TIME NOT NULL,
       status TEXT,
@@ -111,7 +113,7 @@ export async function ensureDatabaseSchema() {
   `);
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS "patientId" TEXT`);
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS "serviceId" INTEGER`);
-  await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS "userId" INTEGER`);
+  await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS "userId" TEXT`);
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS "appointmentDate" DATE`);
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS "appointmentTime" TIME`);
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS status TEXT`);
@@ -120,6 +122,7 @@ export async function ensureDatabaseSchema() {
   await query(`ALTER TABLE appointments ALTER COLUMN id DROP DEFAULT`);
   await query(`ALTER TABLE appointments ALTER COLUMN id TYPE TEXT USING id::text`);
   await query(`ALTER TABLE appointments ALTER COLUMN "patientId" TYPE TEXT USING "patientId"::text`);
+  await query(`ALTER TABLE appointments ALTER COLUMN "userId" TYPE TEXT USING "userId"::text`);
 
   await query(`
     CREATE TABLE IF NOT EXISTS payments (
