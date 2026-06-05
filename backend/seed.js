@@ -80,8 +80,8 @@ async function seedDatabase() {
     for (const [name, description, price, durationMinutes] of services) {
       await query(
         `INSERT INTO services (name, description, price, "durationMinutes")
-         SELECT $1, $2, $3, $4
-         WHERE NOT EXISTS (SELECT 1 FROM services WHERE LOWER(name) = LOWER($1))`,
+         SELECT $1::text, $2::text, $3::numeric, $4::integer
+         WHERE NOT EXISTS (SELECT 1 FROM services WHERE LOWER(name) = LOWER($1::text))`,
         [name, description, price, durationMinutes]
       );
     }
