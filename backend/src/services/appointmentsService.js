@@ -212,6 +212,10 @@ async function getDefaultPublicUserId(db) {
   return result.rowCount ? result.rows[0].id : null;
 }
 
+function namesMatch(left, right) {
+  return String(left || "").trim().toLowerCase() === String(right || "").trim().toLowerCase();
+}
+
 export async function createPublicAppointment(
   { patientName, email, phone, serviceId, appointmentDate, appointmentTime, notes },
   existingClient = null
@@ -227,9 +231,11 @@ export async function createPublicAppointment(
     const normalizedTime = validateWorkingHour(appointmentTime);
     await ensurePublicSlotAvailable(appointmentDate, normalizedTime, client);
 
+    const existingPatient = await findPatientForPublicBooking({ name: patientName, email, phone }, client);
     const patient =
-      await findPatientForPublicBooking({ name: patientName, email, phone }, client) ||
-      await createPatientRecord(
+      existingPatient && namesMatch(existingPatient.name, patientName)
+        ? existingPatient
+        : await createPatientRecord(
         {
           name: patientName.trim(),
           email: email?.trim() || null,
