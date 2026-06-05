@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { CalendarClock, CreditCard, LayoutDashboard, Menu, NotebookTabs, Package, Users, X } from "lucide-react";
-import { useAuth } from "./contexts/AuthContext";
 import { Sidebar } from "./components/Sidebar";
 import { Topbar } from "./components/Topbar";
 import { navigateTo } from "./lib/navigation";
+import { clearAuthToken } from "./lib/auth";
 import { AgendaPage } from "./pages/AgendaPage";
 import { AppointmentsPage } from "./pages/AppointmentsPage";
 import { BillingPage } from "./pages/BillingPage";
@@ -99,8 +99,16 @@ function getPatientIdFromPathname(pathname) {
   return segments[2] || null;
 }
 
-export function AdminDashboardApp({ pathname = "/admin" }) {
-  const { currentUser, logout, hasRole } = useAuth();
+export function AdminDashboardApp({ currentUser, pathname = "/admin" }) {
+  function logout() {
+    clearAuthToken();
+    navigateTo("/login");
+  }
+
+  function hasRole(roles) {
+    return roles.includes(currentUser.role);
+  }
+
   const [activePage, setActivePage] = useState(getPageFromPathname(pathname, currentUser.role));
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const allowedNavigation = useMemo(
