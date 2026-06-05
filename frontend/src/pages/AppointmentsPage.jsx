@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link2, Pencil, PlusCircle } from "lucide-react";
+import { Link2, Pencil, PlusCircle, Trash2, XCircle } from "lucide-react";
 import { useApi } from "../hooks/useApi";
 import { apiRequest, getCollection } from "../lib/api";
 import { formatDateForInput, formatDateTime } from "../lib/formatters";
@@ -83,7 +83,7 @@ export function AppointmentsPage() {
       const payload = {
         patientId: form.patientId,
         serviceId: Number(form.serviceId),
-        userId: Number(form.userId),
+        userId: form.userId,
         appointmentDate: form.appointmentDate,
         appointmentTime: form.appointmentTime,
         status: form.status,
@@ -124,6 +124,63 @@ export function AppointmentsPage() {
     }
   }
 
+  async function handleCancelAppointment(appointment) {
+    if (!window.confirm(`Cancelar o agendamento de ${appointment.patientName}?`)) {
+      return;
+    }
+
+    setSubmitError("");
+
+    try {
+      const response = await apiRequest(`/appointments/${appointment.id}/cancel`, { method: "PATCH" });
+      const canceledAppointment = response.data;
+
+      appointments.setData((current) => {
+        if (!current) {
+          return current;
+        }
+
+        return {
+          ...current,
+          data: current.data.map((item) => (item.id === canceledAppointment.id ? canceledAppointment : item))
+        };
+      });
+      appointments.refresh();
+    } catch (error) {
+      setSubmitError(error.message || "Não foi possível cancelar o agendamento.");
+    }
+  }
+
+  async function handleDeleteAppointment(appointment) {
+    if (!window.confirm(`Apagar definitivamente o agendamento de ${appointment.patientName}?`)) {
+      return;
+    }
+
+    setSubmitError("");
+
+    try {
+      await apiRequest(`/appointments/${appointment.id}`, { method: "DELETE" });
+
+      appointments.setData((current) => {
+        if (!current) {
+          return current;
+        }
+
+        return {
+          ...current,
+          data: current.data.filter((item) => item.id !== appointment.id),
+          meta: {
+            ...current.meta,
+            count: Math.max(0, current.meta.count - 1)
+          }
+        };
+      });
+      appointments.refresh();
+    } catch (error) {
+      setSubmitError(error.message || "Não foi possível apagar o agendamento.");
+    }
+  }
+
   if (appointments.isLoading || patients.isLoading || services.isLoading || users.isLoading || links.isLoading) {
     return <LoadingState label="Carregando agendamentos..." />;
   }
@@ -159,6 +216,8 @@ export function AppointmentsPage() {
         }
       />
 
+      {submitError ? <p className="text-sm text-rose-300">{submitError}</p> : null}
+
       {appointmentCards.length ? (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {appointmentCards.map((appointment) => (
@@ -179,6 +238,24 @@ export function AppointmentsPage() {
                     className="rounded-2xl border border-white/10 bg-white/5 p-2 text-white transition hover:bg-white/10"
                   >
                     <Pencil size={16} />
+                  </button>
+                  {appointment.status !== "canceled" ? (
+                    <button
+                      type="button"
+                      onClick={() => handleCancelAppointment(appointment)}
+                      className="rounded-2xl border border-amber-300/20 bg-amber-400/10 p-2 text-amber-200 transition hover:bg-amber-400/20"
+                      title="Cancelar agendamento"
+                    >
+                      <XCircle size={16} />
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteAppointment(appointment)}
+                    className="rounded-2xl border border-rose-300/20 bg-rose-500/10 p-2 text-rose-200 transition hover:bg-rose-500/20"
+                    title="Apagar agendamento"
+                  >
+                    <Trash2 size={16} />
                   </button>
                 </div>
               }

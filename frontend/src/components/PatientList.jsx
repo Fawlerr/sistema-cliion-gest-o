@@ -1,4 +1,4 @@
-import { ClipboardList, CreditCard, FileText, Pencil, Search, UserRound } from "lucide-react";
+import { ClipboardList, CreditCard, FileText, Pencil, Search, Trash2, UserRound } from "lucide-react";
 import { calculateAge } from "../lib/formatters";
 import { EmptyState } from "./EmptyState";
 import { EntityCard } from "./EntityCard";
@@ -13,6 +13,7 @@ export function PatientList({
   onSearchSubmit,
   onOpenCreate,
   onOpenEdit,
+  onDeletePatient,
   onViewDetails,
   isModalOpen,
   form,
@@ -60,6 +61,8 @@ export function PatientList({
         }
       />
 
+      {submitError && !isModalOpen ? <p className="text-sm text-rose-300">{submitError}</p> : null}
+
       {patients.length ? (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {patients.map((patient) => (
@@ -72,13 +75,24 @@ export function PatientList({
                 { label: "Idade", value: calculateAge(patient.birthDate) || "-" }
               ]}
               actions={
-                <button
-                  type="button"
-                  onClick={() => onOpenEdit(patient)}
-                  className="rounded-2xl border border-white/10 bg-white/5 p-2 text-white transition hover:bg-white/10"
-                >
-                  <Pencil size={16} />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onOpenEdit(patient)}
+                    className="rounded-2xl border border-white/10 bg-white/5 p-2 text-white transition hover:bg-white/10"
+                    title="Editar paciente"
+                  >
+                    <Pencil size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onDeletePatient(patient)}
+                    className="rounded-2xl border border-rose-300/20 bg-rose-500/10 p-2 text-rose-200 transition hover:bg-rose-500/20"
+                    title="Excluir paciente"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               }
             >
               <p className="text-sm text-[color:var(--text-soft)]">{patient.address || "Endereço não informado."}</p>

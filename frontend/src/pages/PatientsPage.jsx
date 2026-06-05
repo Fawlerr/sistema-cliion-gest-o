@@ -139,6 +139,38 @@ export function PatientsPage({ patientId = null }) {
     navigateTo("/admin/patients");
   }
 
+  async function handleDeletePatient(patient) {
+    if (!window.confirm(`Excluir definitivamente o paciente ${patient.name}? Essa ação também remove agendamentos e prontuários vinculados.`)) {
+      return;
+    }
+
+    setSubmitError("");
+
+    try {
+      await apiRequest(`/patients/${patient.id}`, { method: "DELETE" });
+
+      patients.setData((current) => {
+        if (!current) {
+          return current;
+        }
+
+        return {
+          ...current,
+          data: current.data.filter((item) => item.id !== patient.id),
+          meta: {
+            ...current.meta,
+            count: Math.max(0, current.meta.count - 1)
+          }
+        };
+      });
+      patients.refresh();
+      appointments.refresh();
+      payments.refresh();
+    } catch (error) {
+      setSubmitError(error.message || "Não foi possível excluir o paciente.");
+    }
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     setIsSaving(true);
@@ -228,6 +260,7 @@ export function PatientsPage({ patientId = null }) {
       onSearchSubmit={handleSearchSubmit}
       onOpenCreate={openCreateModal}
       onOpenEdit={openEditModal}
+      onDeletePatient={handleDeletePatient}
       onViewDetails={handleViewDetails}
       isModalOpen={isModalOpen}
       form={form}

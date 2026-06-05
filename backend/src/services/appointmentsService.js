@@ -134,6 +134,46 @@ export async function updateAppointment(id, { patientId, serviceId, userId, appo
   return getAppointmentById(id);
 }
 
+export async function cancelAppointment(id) {
+  const result = await query(
+    `
+      UPDATE appointments
+      SET status = 'canceled'
+      WHERE id = $1
+      RETURNING id
+    `,
+    [id]
+  );
+
+  if (!result.rowCount) {
+    throw new ApiError(404, "Appointment not found.");
+  }
+
+  return getAppointmentById(id);
+}
+
+export async function deleteAppointment(id) {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+    await client.query(`UPDATE payments SET "appointmentId" = NULL WHERE "appointmentId" = $1`, [id]);
+
+    const result = await client.query(`DELETE FROM appointments WHERE id = $1 RETURNING id`, [id]);
+
+    if (!result.rowCount) {
+      throw new ApiError(404, "Appointment not found.");
+    }
+
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
 function normalizeSlotTime(value) {
   if (!value) {
     throw new ApiError(400, "Appointment time is required.");

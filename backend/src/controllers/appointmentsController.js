@@ -1,6 +1,8 @@
 import {
+  cancelAppointment,
   createAppointment,
   createPublicAppointment,
+  deleteAppointment,
   getAppointmentById,
   listAppointments,
   listOccupiedSlotsByDate,
@@ -149,4 +151,16 @@ export async function putAppointment(req, res) {
   const appointmentId = parseAppointmentIdParam(req.params.id);
   const appointment = await updateAppointment(appointmentId, validateAppointmentPayload(req.body));
   res.json({ data: appointment });
+}
+
+export async function patchCancelAppointment(req, res) {
+  const appointmentId = parseAppointmentIdParam(req.params.id);
+  const appointment = await cancelAppointment(appointmentId);
+  res.json({ data: appointment });
+}
+
+export async function deleteAppointmentById(req, res) {
+  const appointmentId = parseAppointmentIdParam(req.params.id);
+  await deleteAppointment(appointmentId);
+  res.status(204).send();
 }

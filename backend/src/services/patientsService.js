@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { query } from "../db/pool.js";
+import { pool, query } from "../db/pool.js";
 import { ApiError } from "../lib/apiError.js";
 
 const patientSelect = `
@@ -118,4 +118,38 @@ export async function updatePatient(id, { name, email, phone, birthDate, address
   }
 
   return result.rows[0];
+}
+
+export async function deletePatient(id) {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    await client.query(
+      `
+        UPDATE payments
+        SET "appointmentId" = NULL
+        WHERE "appointmentId" IN (
+          SELECT id FROM appointments WHERE "patientId" = $1 OR patient_id = $1
+        )
+      `,
+      [id]
+    );
+    await client.query(`DELETE FROM medical_records WHERE "patientId" = $1`, [id]);
+    await client.query(`DELETE FROM appointments WHERE "patientId" = $1 OR patient_id = $1`, [id]);
+
+    const result = await client.query(`DELETE FROM patients WHERE id = $1 RETURNING id`, [id]);
+
+    if (!result.rowCount) {
+      throw new ApiError(404, "Patient not found.");
+    }
+
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 }

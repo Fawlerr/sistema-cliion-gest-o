@@ -1,4 +1,4 @@
-import { createPatient, getPatientById, listPatients, updatePatient } from "../services/patientsService.js";
+import { createPatient, deletePatient, getPatientById, listPatients, updatePatient } from "../services/patientsService.js";
 import { ApiError } from "../lib/apiError.js";
 
 function parsePatientIdParam(value) {
@@ -68,4 +68,10 @@ export async function putPatient(req, res) {
   const patientId = parsePatientIdParam(req.params.id);
   const patient = await updatePatient(patientId, validatePatientPayload(req.body));
   res.json({ data: patient });
+}
+
+export async function deletePatientById(req, res) {
+  const patientId = parsePatientIdParam(req.params.id);
+  await deletePatient(patientId);
+  res.status(204).send();
 }

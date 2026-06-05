@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { asyncHandler } from "../lib/asyncHandler.js";
-import { getPatient, getPatients, postPatient, putPatient } from "../controllers/patientsController.js";
+import { deletePatientById, getPatient, getPatients, postPatient, putPatient } from "../controllers/patientsController.js";
 import { getPatientMedicalRecords, postPatientMedicalRecord } from "../controllers/medicalRecordsController.js";
 import { authenticate, authorizeRoles } from "../middleware/authMiddleware.js";
 
@@ -18,3 +18,4 @@ patientsRouter.get("/:id", asyncHandler(getPatient));
 // Apenas ADMIN e DOCTOR podem criar e editar (a catraca entra aqui!)
 patientsRouter.post("/", authorizeRoles([1, 2]), asyncHandler(postPatient));
 patientsRouter.put("/:id", authorizeRoles([1, 2]), asyncHandler(putPatient));
+patientsRouter.delete("/:id", authorizeRoles([1]), asyncHandler(deletePatientById));
