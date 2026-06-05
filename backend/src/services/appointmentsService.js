@@ -80,8 +80,22 @@ export async function createAppointment({ patientId, serviceId, userId, appointm
   const appointmentId = crypto.randomUUID();
   const result = await query(
     `
-      INSERT INTO appointments (id, "patientId", "serviceId", "userId", "appointmentDate", "appointmentTime", status, notes)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO appointments (
+        id,
+        "patientId",
+        "serviceId",
+        "userId",
+        "appointmentDate",
+        "appointmentTime",
+        patient_id,
+        service_id,
+        user_id,
+        appointment_date,
+        appointment_time,
+        status,
+        notes
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id
     `,
     [appointmentId, patientId, serviceId, userId, appointmentDate, appointmentTime, status || null, notes || null]
@@ -100,6 +114,11 @@ export async function updateAppointment(id, { patientId, serviceId, userId, appo
         "userId" = $4,
         "appointmentDate" = $5,
         "appointmentTime" = $6,
+        patient_id = $2,
+        service_id = $3,
+        user_id = $4,
+        appointment_date = $5,
+        appointment_time = $6,
         status = $7,
         notes = $8
       WHERE id = $1
@@ -225,8 +244,22 @@ export async function createPublicAppointment(
     const appointmentId = crypto.randomUUID();
     const insertResult = await client.query(
       `
-        INSERT INTO appointments (id, "patientId", "serviceId", "userId", "appointmentDate", "appointmentTime", status, notes)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        INSERT INTO appointments (
+          id,
+          "patientId",
+          "serviceId",
+          "userId",
+          "appointmentDate",
+          "appointmentTime",
+          patient_id,
+          service_id,
+          user_id,
+          appointment_date,
+          appointment_time,
+          status,
+          notes
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $2, $3, $4, $5, $6, $7, $8)
         RETURNING id
       `,
       [appointmentId, patient.id, serviceId, userId, appointmentDate, normalizedTime, "pending", notes || null]

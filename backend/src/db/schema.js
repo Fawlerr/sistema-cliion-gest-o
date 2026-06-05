@@ -119,10 +119,35 @@ export async function ensureDatabaseSchema() {
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS status TEXT`);
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS notes TEXT`);
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()`);
+  await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS patient_id TEXT`);
+  await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS service_id INTEGER`);
+  await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS user_id TEXT`);
+  await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS appointment_date DATE`);
+  await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS appointment_time TIME`);
+  await query(`ALTER TABLE appointments ALTER COLUMN patient_id DROP NOT NULL`);
+  await query(`ALTER TABLE appointments ALTER COLUMN service_id DROP NOT NULL`);
+  await query(`ALTER TABLE appointments ALTER COLUMN user_id DROP NOT NULL`);
+  await query(`ALTER TABLE appointments ALTER COLUMN appointment_date DROP NOT NULL`);
+  await query(`ALTER TABLE appointments ALTER COLUMN appointment_time DROP NOT NULL`);
   await query(`ALTER TABLE appointments ALTER COLUMN id DROP DEFAULT`);
   await query(`ALTER TABLE appointments ALTER COLUMN id TYPE TEXT USING id::text`);
   await query(`ALTER TABLE appointments ALTER COLUMN "patientId" TYPE TEXT USING "patientId"::text`);
   await query(`ALTER TABLE appointments ALTER COLUMN "userId" TYPE TEXT USING "userId"::text`);
+  await query(`ALTER TABLE appointments ALTER COLUMN patient_id TYPE TEXT USING patient_id::text`);
+  await query(`ALTER TABLE appointments ALTER COLUMN user_id TYPE TEXT USING user_id::text`);
+  await query(`ALTER TABLE appointments ALTER COLUMN service_id TYPE INTEGER USING service_id::integer`);
+  await query(`ALTER TABLE appointments ALTER COLUMN appointment_date TYPE DATE USING appointment_date::date`);
+  await query(`ALTER TABLE appointments ALTER COLUMN appointment_time TYPE TIME USING appointment_time::time`);
+  await query(`UPDATE appointments SET "patientId" = patient_id WHERE "patientId" IS NULL AND patient_id IS NOT NULL`);
+  await query(`UPDATE appointments SET patient_id = "patientId" WHERE patient_id IS NULL AND "patientId" IS NOT NULL`);
+  await query(`UPDATE appointments SET "serviceId" = service_id WHERE "serviceId" IS NULL AND service_id IS NOT NULL`);
+  await query(`UPDATE appointments SET service_id = "serviceId" WHERE service_id IS NULL AND "serviceId" IS NOT NULL`);
+  await query(`UPDATE appointments SET "userId" = user_id WHERE "userId" IS NULL AND user_id IS NOT NULL`);
+  await query(`UPDATE appointments SET user_id = "userId" WHERE user_id IS NULL AND "userId" IS NOT NULL`);
+  await query(`UPDATE appointments SET "appointmentDate" = appointment_date WHERE "appointmentDate" IS NULL AND appointment_date IS NOT NULL`);
+  await query(`UPDATE appointments SET appointment_date = "appointmentDate" WHERE appointment_date IS NULL AND "appointmentDate" IS NOT NULL`);
+  await query(`UPDATE appointments SET "appointmentTime" = appointment_time WHERE "appointmentTime" IS NULL AND appointment_time IS NOT NULL`);
+  await query(`UPDATE appointments SET appointment_time = "appointmentTime" WHERE appointment_time IS NULL AND "appointmentTime" IS NOT NULL`);
 
   await query(`
     CREATE TABLE IF NOT EXISTS payments (
