@@ -5,21 +5,21 @@ import { createPatientRecord, findPatientForPublicBooking } from "./patientsServ
 const appointmentSelect = `
   SELECT
     a.id,
-    a.patient_id AS "patientId",
-    a.service_id AS "serviceId",
-    a.user_id AS "userId",
-    a.appointment_date AS "appointmentDate",
-    a.appointment_time AS "appointmentTime",
+    a."patientId",
+    a."serviceId",
+    a."userId",
+    a."appointmentDate",
+    a."appointmentTime",
     a.status,
     a.notes,
-    a.created_at AS "createdAt",
+    a."createdAt",
     p.name AS "patientName",
     s.name AS "serviceName",
-    COALESCE(u.name, CONCAT('Profissional #', a.user_id::text)) AS "userName"
+    COALESCE(u.name, CONCAT('Profissional #', a."userId"::text)) AS "userName"
   FROM appointments a
-  INNER JOIN patients p ON p.id = a.patient_id
-  INNER JOIN services s ON s.id = a.service_id
-  LEFT JOIN users u ON u.id::text = a.user_id::text
+  INNER JOIN patients p ON p.id = a."patientId"
+  INNER JOIN services s ON s.id = a."serviceId"
+  LEFT JOIN users u ON u.id::text = a."userId"::text
 `;
 
 const workingHours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
@@ -29,21 +29,21 @@ function buildScopeConditions({ from, to, scope }) {
   const values = [];
 
   if (scope === "today") {
-    conditions.push("a.appointment_date = CURRENT_DATE");
+    conditions.push(`a."appointmentDate" = CURRENT_DATE`);
   } else if (scope === "future") {
-    conditions.push("a.appointment_date > CURRENT_DATE");
+    conditions.push(`a."appointmentDate" > CURRENT_DATE`);
   } else if (scope === "past") {
-    conditions.push("a.appointment_date < CURRENT_DATE");
+    conditions.push(`a."appointmentDate" < CURRENT_DATE`);
   }
 
   if (from) {
     values.push(from);
-    conditions.push(`a.appointment_date >= $${values.length}`);
+    conditions.push(`a."appointmentDate" >= $${values.length}`);
   }
 
   if (to) {
     values.push(to);
-    conditions.push(`a.appointment_date <= $${values.length}`);
+    conditions.push(`a."appointmentDate" <= $${values.length}`);
   }
 
   return { conditions, values };
@@ -57,7 +57,7 @@ export async function listAppointments({ from, to, limit, scope }) {
   const result = await query(
     `${appointmentSelect}
      ${whereClause}
-     ORDER BY a.appointment_date ASC, a.appointment_time ASC, a.id ASC
+     ORDER BY a."appointmentDate" ASC, a."appointmentTime" ASC, a.id ASC
      LIMIT $${values.length}`,
     values
   );
@@ -78,7 +78,7 @@ export async function getAppointmentById(id) {
 export async function createAppointment({ patientId, serviceId, userId, appointmentDate, appointmentTime, status, notes }) {
   const result = await query(
     `
-      INSERT INTO appointments (patient_id, service_id, user_id, appointment_date, appointment_time, status, notes)
+      INSERT INTO appointments ("patientId", "serviceId", "userId", "appointmentDate", "appointmentTime", status, notes)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING id
     `,
@@ -93,11 +93,11 @@ export async function updateAppointment(id, { patientId, serviceId, userId, appo
     `
       UPDATE appointments
       SET
-        patient_id = $2,
-        service_id = $3,
-        user_id = $4,
-        appointment_date = $5,
-        appointment_time = $6,
+        "patientId" = $2,
+        "serviceId" = $3,
+        "userId" = $4,
+        "appointmentDate" = $5,
+        "appointmentTime" = $6,
         status = $7,
         notes = $8
       WHERE id = $1
@@ -140,9 +140,9 @@ export function validateWorkingHour(appointmentTime) {
 export async function listOccupiedSlotsByDate(date, db = { query }) {
   const result = await db.query(
     `
-      SELECT DISTINCT TO_CHAR(appointment_time, 'HH24:MI') AS time
+      SELECT DISTINCT TO_CHAR("appointmentTime", 'HH24:MI') AS time
       FROM appointments
-      WHERE appointment_date = $1
+      WHERE "appointmentDate" = $1
         AND COALESCE(LOWER(status), '') <> 'canceled'
       ORDER BY time ASC
     `,
@@ -165,8 +165,8 @@ async function ensurePublicSlotAvailable(appointmentDate, appointmentTime, db) {
     `
       SELECT 1
       FROM appointments
-      WHERE appointment_date = $1
-        AND appointment_time = $2
+      WHERE "appointmentDate" = $1
+        AND "appointmentTime" = $2
         AND COALESCE(LOWER(status), '') <> 'canceled'
       LIMIT 1
     `,
@@ -181,11 +181,11 @@ async function ensurePublicSlotAvailable(appointmentDate, appointmentTime, db) {
 async function getDefaultPublicUserId(db) {
   const result = await db.query(
     `
-      SELECT user_id AS id
+      SELECT "userId" AS id
       FROM appointments
-      WHERE user_id IS NOT NULL
-      GROUP BY user_id
-      ORDER BY user_id ASC
+      WHERE "userId" IS NOT NULL
+      GROUP BY "userId"
+      ORDER BY "userId" ASC
       LIMIT 1
     `
   );
@@ -224,7 +224,7 @@ export async function createPublicAppointment(
     const userId = await getDefaultPublicUserId(client);
     const insertResult = await client.query(
       `
-        INSERT INTO appointments (patient_id, service_id, user_id, appointment_date, appointment_time, status, notes)
+        INSERT INTO appointments ("patientId", "serviceId", "userId", "appointmentDate", "appointmentTime", status, notes)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING id
       `,
