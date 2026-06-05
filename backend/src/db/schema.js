@@ -38,6 +38,13 @@ export async function ensureDatabaseSchema() {
     CREATE EXTENSION IF NOT EXISTS pgcrypto
   `);
 
+  await query(`ALTER TABLE IF EXISTS appointments DROP CONSTRAINT IF EXISTS "appointments_patientId_fkey"`);
+  await query(`ALTER TABLE IF EXISTS appointments DROP CONSTRAINT IF EXISTS appointments_patient_id_fkey`);
+  await query(`ALTER TABLE IF EXISTS medical_records DROP CONSTRAINT IF EXISTS "medical_records_patientId_fkey"`);
+  await query(`ALTER TABLE IF EXISTS medical_records DROP CONSTRAINT IF EXISTS medical_records_patient_id_fkey`);
+  await query(`ALTER TABLE IF EXISTS payments DROP CONSTRAINT IF EXISTS "payments_appointmentId_fkey"`);
+  await query(`ALTER TABLE IF EXISTS payments DROP CONSTRAINT IF EXISTS payments_appointment_id_fkey`);
+
   await query(`
     CREATE TABLE IF NOT EXISTS patients (
       id TEXT PRIMARY KEY,
@@ -55,6 +62,8 @@ export async function ensureDatabaseSchema() {
   await query(`ALTER TABLE patients ADD COLUMN IF NOT EXISTS "birthDate" DATE`);
   await query(`ALTER TABLE patients ADD COLUMN IF NOT EXISTS address TEXT`);
   await query(`ALTER TABLE patients ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()`);
+  await query(`ALTER TABLE patients ALTER COLUMN id DROP DEFAULT`);
+  await query(`ALTER TABLE patients ALTER COLUMN id TYPE TEXT USING id::text`);
 
   await query(`
     CREATE TABLE IF NOT EXISTS services (
@@ -108,6 +117,9 @@ export async function ensureDatabaseSchema() {
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS status TEXT`);
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS notes TEXT`);
   await query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()`);
+  await query(`ALTER TABLE appointments ALTER COLUMN id DROP DEFAULT`);
+  await query(`ALTER TABLE appointments ALTER COLUMN id TYPE TEXT USING id::text`);
+  await query(`ALTER TABLE appointments ALTER COLUMN "patientId" TYPE TEXT USING "patientId"::text`);
 
   await query(`
     CREATE TABLE IF NOT EXISTS payments (
@@ -126,6 +138,7 @@ export async function ensureDatabaseSchema() {
   await query(`ALTER TABLE payments ADD COLUMN IF NOT EXISTS status TEXT`);
   await query(`ALTER TABLE payments ADD COLUMN IF NOT EXISTS "paidAt" TIMESTAMPTZ`);
   await query(`ALTER TABLE payments ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()`);
+  await query(`ALTER TABLE payments ALTER COLUMN "appointmentId" TYPE TEXT USING "appointmentId"::text`);
 
   await query(`
     CREATE TABLE IF NOT EXISTS expenses (
@@ -158,6 +171,7 @@ export async function ensureDatabaseSchema() {
   await query(`ALTER TABLE medical_records ADD COLUMN IF NOT EXISTS notes TEXT`);
   await query(`ALTER TABLE medical_records ADD COLUMN IF NOT EXISTS data JSONB NOT NULL DEFAULT '{}'::jsonb`);
   await query(`ALTER TABLE medical_records ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()`);
+  await query(`ALTER TABLE medical_records ALTER COLUMN "patientId" TYPE TEXT USING "patientId"::text`);
 
   await query(`CREATE INDEX IF NOT EXISTS appointments_date_time_idx ON appointments ("appointmentDate", "appointmentTime")`);
   await query(`CREATE INDEX IF NOT EXISTS medical_records_patient_date_idx ON medical_records ("patientId", date DESC)`);
