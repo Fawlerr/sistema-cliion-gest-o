@@ -1,29 +1,12 @@
-# TODO: Implement Secure Public Appointment Links System
+# TODO - REBRANDING FRONT-END PÚBLICO (Cliion)
 
-## Phase 1: Database Migration ✅
-- [x] Create TODO.md
-- [x] Update prisma/schema.prisma with models + appointment_links 
-- [ ] prisma migrate dev --name init_schema_links
+- [x] 1. Criar componentes visuais do público (Header/Hero/Sobre/Profissionais/Benefícios/Depoimentos/CTA/Footer)
 
-## Phase 2: Backend Implementation ✅
-- [x] Create appointmentLinksService.js
-- [x] Create appointmentLinksController.js  
-- [x] Create appointmentLinksRoutes.js
-- [x] Mount in routes/index.js
-
-## Phase 2: Backend Implementation
-- [ ] Create appointmentLinksService.js
-- [ ] Create appointmentLinksController.js  
-- [ ] Create appointmentLinksRoutes.js
-- [ ] Mount in routes/index.js
-
-## Phase 3: Frontend Admin UI
-- [ ] Add Generate Link modal to AppointmentsPage.jsx
-
-## Phase 4: Public UI 
-- [ ] Update App.jsx router for /agendar/:token
-- [ ] Update PublicBookingPage.jsx for token flow
-
-## Phase 5: Integration & Test
-- [ ] Full flow test
+- [ ] 2. Atualizar `frontend/src/pages/PublicLandingPage.jsx` para nova home (sem alterar lógica de APIs/rotas existentes)
+- [ ] 3. Atualizar apenas o “shell visual” de `frontend/src/pages/PublicBookingPage.jsx` e `frontend/src/pages/PublicAppointmentLinkPage.jsx` (mantendo todo o fluxo e validações)
+- [ ] 4. Modernizar/ajustar `frontend/src/index.css` para paleta premium compatível com o público (sem quebrar admin)
+- [ ] 5. Garantir responsividade (mobile/tablet/desktop) e microanimações leves
+- [ ] 6. Implementar lazy loading das imagens de profissionais
+- [ ] 7. Rodar build/teste (frontend) e validar rotas públicas: `/`, `/booking/:serviceId`, `/agendar/:token`
+- [ ] 8. Consolidar resumo final com arquivos modificados
 
