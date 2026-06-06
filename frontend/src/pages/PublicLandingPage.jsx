@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { ArrowRight } from "lucide-react";
+
 import { EmptyState } from "../components/EmptyState";
 import { ErrorState } from "../components/ErrorState";
 import { LoadingState } from "../components/LoadingState";
@@ -13,7 +14,7 @@ import { PublicBenefits } from "../components/public/PublicBenefits";
 import { PublicFinalCTA } from "../components/public/PublicFinalCTA";
 import { PublicHero } from "../components/public/PublicHero";
 import { PublicProfessionals } from "../components/public/PublicProfessionals";
-import { PublicHeader, PublicFooter } from "../components/public/PublicLayout";
+import { PublicFooter, PublicHeader } from "../components/public/PublicLayout";
 import { PublicTestimonials } from "../components/public/PublicTestimonials";
 
 const heroImageUrl = "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1600&q=80";
@@ -21,7 +22,6 @@ const heroImageUrl = "https://images.unsplash.com/photo-1584515933487-779824d293
 export function PublicLandingPage() {
   const services = useApi((signal) => getCollection("/services", { signal }), []);
   const serviceCards = useMemo(() => services.data?.data || [], [services.data]);
-
 
   function scrollToId(id) {
     const el = document.getElementById(id);
@@ -46,7 +46,10 @@ export function PublicLandingPage() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <PublicHeader onNavToAdmin={() => (window.location.href = "/admin")} brandSubtitle="Plataforma moderna de saúde e agenda inteligente" />
+      <PublicHeader
+        onNavToAdmin={() => (window.location.href = "/admin")}
+        brandSubtitle="Plataforma moderna de saúde e agenda inteligente"
+      />
 
       <main>
         <PublicHero
@@ -85,7 +88,8 @@ export function PublicLandingPage() {
 
                     <h3 className="mt-5 text-2xl font-semibold text-slate-900">{service.name}</h3>
                     <p className="mt-3 min-h-[96px] text-sm leading-7 text-slate-600">
-                      {service.description || "Descrição em atualização. A página de reserva apresenta esse serviço em um fluxo claro."}
+                      {service.description ||
+                        "Descrição em atualização. A página de reserva apresenta esse serviço em um fluxo claro."}
                     </p>
 
                     <div className="mt-6 flex items-center justify-between">
@@ -104,14 +108,15 @@ export function PublicLandingPage() {
                   </article>
                 ))
               ) : (
-                <EmptyState title="Nenhum serviço disponível" description="A clínica ainda não publicou serviços para agendamento online." />
+                <EmptyState
+                  title="Nenhum serviço disponível"
+                  description="A clínica ainda não publicou serviços para agendamento online."
+                />
               )}
             </div>
 
             <div className="mt-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-              <div className="text-sm text-slate-600">
-                Agendamento premium e organizado para oferecer segurança e confiança.
-              </div>
+              <div className="text-sm text-slate-600">Agendamento premium e organizado para oferecer segurança e confiança.</div>
               <button
                 type="button"
                 disabled={!serviceCards[0]}
