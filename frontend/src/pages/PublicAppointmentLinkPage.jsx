@@ -180,9 +180,13 @@ export function PublicAppointmentLinkPage({ token }) {
             </div>
           </button>
 
-          <a href="/" className="rounded-full border border-slate-900/10 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white">
+          <button
+            type="button"
+            onClick={() => navigateTo("/")}
+            className="rounded-full border border-slate-900/10 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white"
+          >
             Site principal
-          </a>
+          </button>
         </div>
       </header>
 

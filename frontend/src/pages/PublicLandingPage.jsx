@@ -47,7 +47,7 @@ export function PublicLandingPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <PublicHeader
-        onNavToAdmin={() => (window.location.href = "/admin")}
+        onNavToAdmin={() => navigateTo("/admin")}
         brandSubtitle="Plataforma moderna de saúde e agenda inteligente"
       />
 

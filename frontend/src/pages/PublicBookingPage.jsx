@@ -207,9 +207,13 @@ export function PublicBookingPage({ serviceId }) {
             </div>
           </button>
 
-          <a href="/admin" className="rounded-full border border-slate-900/10 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white">
+          <button
+            type="button"
+            onClick={() => navigateTo("/admin")}
+            className="rounded-full border border-slate-900/10 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white"
+          >
             Área administrativa
-          </a>
+          </button>
         </div>
       </header>
 
