@@ -21,7 +21,8 @@ function buildInitialForm() {
   };
 }
 
-const patientTabStorageKey = "clinic-dashboard-demo.patient-tab";
+const patientTabStorageKey = "cliion.patient-tab";
+const legacyPatientTabStorageKey = "clinic-dashboard-demo.patient-tab";
 
 function setStoredPatientTab(tabId) {
   if (typeof window === "undefined") {
@@ -36,7 +37,7 @@ function getStoredPatientTab() {
     return "records";
   }
 
-  const storedTab = window.sessionStorage.getItem(patientTabStorageKey) || "records";
+  const storedTab = window.sessionStorage.getItem(patientTabStorageKey) || window.sessionStorage.getItem(legacyPatientTabStorageKey) || "records";
   return storedTab === "payments" ? "payments" : "records";
 }
 

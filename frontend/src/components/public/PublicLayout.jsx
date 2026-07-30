@@ -72,15 +72,15 @@ export function PublicFooter() {
           <div className="mt-4 space-y-3 text-sm text-slate-600">
             <p className="flex items-center gap-2">
               <span className="inline-block h-2 w-2 rounded-full bg-sky-500" />
-              (11) 99999-9999
+              (11) 98765-4321
             </p>
             <p className="flex items-center gap-2">
               <span className="inline-block h-2 w-2 rounded-full bg-sky-500" />
-              contato@cliion.com
+              contato@cliion.com.br
             </p>
             <p className="flex items-center gap-2">
               <span className="inline-block h-2 w-2 rounded-full bg-sky-500" />
-              Av. da Saúde, 123 — São Paulo/SP
+              Av. Paulista, 1000 — Bela Vista, São Paulo/SP
             </p>
           </div>
         </div>

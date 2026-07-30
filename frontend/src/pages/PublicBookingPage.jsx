@@ -200,9 +200,9 @@ export function PublicBookingPage({ serviceId }) {
       <header className="border-b border-slate-900/5 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-6 lg:px-8">
           <button type="button" onClick={() => navigateTo("/")} className="flex items-center gap-3">
-            <img src={logo} alt="Clinic Dashboard Demo" className="h-11 w-auto object-contain" />
+            <img src={logo} alt="Cliion" className="h-11 w-auto object-contain" />
             <div className="text-left">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-teal-700">Clinic Dashboard Demo</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-teal-700">Cliion</p>
               <p className="text-sm text-slate-600">Reserva de atendimento</p>
             </div>
           </button>
@@ -297,7 +297,7 @@ export function PublicBookingPage({ serviceId }) {
                     value={form.email}
                     onChange={(event) => updateField("email", event.target.value)}
                     className="w-full rounded-[22px] border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-teal-500 focus:bg-white"
-                    placeholder="voce@exemplo.com"
+                    placeholder="seu.email@dominio.com"
                   />
                 </FormField>
               </div>

@@ -278,7 +278,7 @@ export function PublicAppointmentLinkPage({ token }) {
                     value={form.email}
                     onChange={(event) => updateField("email", event.target.value)}
                     className="w-full rounded-[22px] border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-teal-500 focus:bg-white"
-                    placeholder="voce@exemplo.com"
+                    placeholder="seu.email@dominio.com"
                   />
                 </FormField>
               </div>

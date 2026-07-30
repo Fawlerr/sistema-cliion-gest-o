@@ -4,21 +4,21 @@ import { Star } from "lucide-react";
 const testimonials = [
   {
     name: "Mariana S.",
-    role: "Paciente",
+    role: "Paciente • Reabilitação Pós-Operatória",
     quote:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Experiência muito organizada e acolhedora."
+      "O atendimento na Cliion superou todas as minhas expectativas. O acompanhamento do fisioterapeuta durante o pós-operatório foi fundamental para o meu retorno seguro às rotinas diárias."
   },
   {
     name: "Ricardo P.",
-    role: "Paciente",
+    role: "Paciente • Osteopatia & Dor Lumbar",
     quote:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Agendamento rápido e com disponibilidade real."
+      "Cheguei à clínica com fortes dores nas costas e dificuldades para trabalhar. Após poucas sessões de osteopatia e orientações precisas, já sinto um alívio enorme."
   },
   {
     name: "Fernanda L.",
-    role: "Acompanhante",
+    role: "Paciente • Fisioterapia Esportiva",
     quote:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Profissionais atenciosos e layout premium."
+      "Plataforma de agendamento prática e pontualidade impecável no atendimento. Os profissionais demonstram um cuidado técnico incrível em cada etapa do tratamento."
   }
 ];
 

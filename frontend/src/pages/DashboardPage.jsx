@@ -46,22 +46,22 @@ export function DashboardPage() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <Panel title="Faturamento ao longo do tempo" subtitle="Pagamentos pagos agregados por mês a partir da tabela de pagamentos.">
+        <Panel title="Faturamento ao longo do tempo" subtitle="Acompanhamento mensal de receita confirmada e faturamento de atendimentos.">
           <RevenueChart data={charts.revenueTimeline} />
         </Panel>
 
-        <Panel title="Agendamentos por dia" subtitle="Volume diário de marcações nos últimos 7 dias a partir da tabela de agendamentos.">
+        <Panel title="Agendamentos por dia" subtitle="Volume diário de marcações e consultas nos últimos 7 dias.">
           <AppointmentsChart data={charts.appointmentsByDay} />
         </Panel>
       </section>
 
-      <Panel title="Próximos agendamentos" subtitle="Registros recentes com dados unidos de paciente, serviço e profissional.">
+      <Panel title="Próximos agendamentos" subtitle="Visão geral dos atendimentos agendados na plataforma com status em tempo real.">
         <DataTable
           rows={data.appointments}
           emptyState={
             <EmptyState
               title="Nenhum agendamento encontrado"
-              description="Quando houver agendamentos no banco, eles aparecerão aqui com paciente, serviço e status."
+              description="Não há registros de consultas ou avaliações para o período selecionado."
             />
           }
           columns={[

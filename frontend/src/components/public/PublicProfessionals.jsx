@@ -10,39 +10,46 @@ const professionals = [
   {
     id: "p1",
     image: fisio1,
-    name: "Profissional 01",
-    specialization: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+    name: "Dr. João Paulo Silva",
+    specialization: "Fisioterapia Ortopédica & Traumatológica • CREFITO 248.910-F",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      "Especialista no tratamento de lesões articulares, dores crônicas na coluna e reabilitação pós-operatória com protocolos individuais fundamentados em evidências."
   },
   {
     id: "p2",
     image: fisio2,
-    name: "Profissional 02",
-    specialization: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+    name: "Dra. Camila Torres",
+    specialization: "Osteopatia & Terapia Manual Avançada • CREFITO 312.450-F",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      "Foco na restauração da mobilidade corporal, alívio de tensões neuromusculares e prevenção de lesões através de técnicas manuais integrativas."
   },
   {
     id: "p3",
     image: fisio3,
-    name: "Profissional 03",
-    specialization: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+    name: "Dr. Mateus Santos",
+    specialization: "Fisioterapia Esportiva & Performance • CREFITO 195.830-F",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      "Atendimento dedicado a atletas e praticantes de atividades físicas, combinando avaliação biomecânica e fortalecimento preventivo."
   },
   {
     id: "p4",
     image: fisio4,
-    name: "Profissional 04",
-    specialization: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+    name: "Dra. Beatriz Oliveira",
+    specialization: "Fisioterapia Pélvica & Saúde Funcional • CREFITO 284.102-F",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      "Acompanhamento especializado para a saúde funcional e pélvica, garantindo um ambiente acolhedor, seguro e com rigor técnico."
   }
 ];
 
 function ProfessionalCard({ professional, index }) {
   const isReversed = index % 2 === 1;
+
+  function handleBookingScroll() {
+    const el = document.getElementById("services");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
 
   return (
     <article className="group rounded-[40px] border border-slate-200 bg-white shadow-sm">
@@ -76,16 +83,12 @@ function ProfessionalCard({ professional, index }) {
           <div className="mt-8 flex items-center gap-3">
             <button
               type="button"
-              onClick={() => { /* placeholder */ }}
+              onClick={handleBookingScroll}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
             >
               Agendar Horário
               <ArrowRight size={18} />
             </button>
-
-            <span className="text-xs text-slate-500">
-              Botão independente (placeholder para backend)
-            </span>
           </div>
         </div>
 
@@ -115,8 +118,7 @@ export function PublicProfessionals() {
             Destaque para quem cuida
           </h2>
           <p className="mt-6 text-base leading-8 text-slate-600">
-            Experiência premium em um layout alternado: foto grande, texto ao lado e botão de agendamento
-            independente.
+            Nossa equipe conta com profissionais altamente qualificados e dedicados à sua reabilitação e qualidade de vida.
           </p>
         </div>
 

@@ -12,8 +12,7 @@ export function PublicAbout() {
               Atendimento que une tecnologia e acolhimento
             </h2>
             <p className="mt-6 text-base leading-8 text-slate-600 md:text-lg">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam.
+              Na Cliion, unimos protocolos terapêuticos avançados a um atendimento verdadeiramente humanizado. Nosso compromisso é proporcionar uma jornada de recuperação segura, com avaliações detalhadas, planejamento personalizado e acompanhamento contínuo da sua evolução física.
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
