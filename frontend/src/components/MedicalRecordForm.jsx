@@ -28,34 +28,124 @@ export function MedicalRecordForm({ open, onClose, onSubmit, isSaving, submitErr
     setForm((current) => ({ ...current, [field]: value }));
   }
 
-  function updateDynamicField(field, value) {
-    setForm((current) => ({
-      ...current,
-      data: {
-        ...current.data,
-        [field]: value
-      }
-    }));
+  function toggleCheckboxOption(fieldName, option) {
+    setForm((current) => {
+      const currentList = Array.isArray(current.data[fieldName]) ? current.data[fieldName] : [];
+      const updatedList = currentList.includes(option)
+        ? currentList.filter((item) => item !== option)
+        : [...currentList, option];
+
+      return {
+        ...current,
+        data: {
+          ...current.data,
+          [fieldName]: updatedList
+        }
+      };
+    });
   }
 
-  function handleTypeChange(value) {
-    setForm((current) => ({
-      ...current,
-      type: value,
-      data: {}
-    }));
-  }
+  function renderFieldInput(field) {
+    const value = form.data[field.name];
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    await onSubmit(form);
+    if (field.type === "scale") {
+      const currentScale = Number(value ?? 0);
+      return (
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {Array.from({ length: 11 }).map((_, idx) => {
+            const isSelected = value !== undefined && value !== null && String(value) === String(idx);
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => updateDynamicField(field.name, idx)}
+                className={`flex h-10 w-10 items-center justify-center rounded-xl font-bold text-sm transition ${
+                  isSelected
+                    ? "bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20"
+                    : "border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                }`}
+              >
+                {idx}
+              </button>
+            );
+          })}
+        </div>
+      );
+    }
+
+    if (field.type === "checkbox-group") {
+      const selectedList = Array.isArray(value) ? value : [];
+      return (
+        <div className="grid gap-2 sm:grid-cols-2 pt-1">
+          {field.options.map((option) => {
+            const checked = selectedList.includes(option);
+            return (
+              <label
+                key={option}
+                onClick={() => toggleCheckboxOption(field.name, option)}
+                className={`flex items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-xs font-medium cursor-pointer transition select-none ${
+                  checked
+                    ? "border-teal-500/40 bg-teal-500/10 text-teal-300"
+                    : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => {}}
+                  className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-teal-500 focus:ring-0"
+                />
+                <span>{option}</span>
+              </label>
+            );
+          })}
+        </div>
+      );
+    }
+
+    if (field.type === "select") {
+      return (
+        <select
+          value={value || ""}
+          onChange={(event) => updateDynamicField(field.name, event.target.value)}
+          className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+        >
+          <option value="">Selecione uma opção</option>
+          {field.options.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    if (field.type === "textarea") {
+      return (
+        <textarea
+          rows={3}
+          value={value || ""}
+          onChange={(event) => updateDynamicField(field.name, event.target.value)}
+          className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+        />
+      );
+    }
+
+    return (
+      <input
+        type="text"
+        value={value || ""}
+        onChange={(event) => updateDynamicField(field.name, event.target.value)}
+        className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
+      />
+    );
   }
 
   return (
     <Modal
       open={open}
-      title="Novo prontuário"
-      subtitle="Formulário único e dinâmico. O tipo selecionado define os campos específicos do registro."
+      title="Novo prontuário / Ficha de Avaliação"
+      subtitle="Selecione o tipo de atendimento para carregar os campos específicos do prontuário."
       onClose={onClose}
     >
       <form className="space-y-5" onSubmit={handleSubmit}>
@@ -89,7 +179,7 @@ export function MedicalRecordForm({ open, onClose, onSubmit, isSaving, submitErr
 
         <FormField label="Observações gerais">
           <textarea
-            rows={3}
+            rows={2}
             value={form.notes}
             onChange={(event) => updateField("notes", event.target.value)}
             className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
@@ -97,24 +187,10 @@ export function MedicalRecordForm({ open, onClose, onSubmit, isSaving, submitErr
         </FormField>
 
         {form.type ? (
-          <div className="grid gap-4">
+          <div className="max-h-[55vh] overflow-y-auto pr-1 space-y-4">
             {dynamicFields.map((field) => (
               <FormField key={field.name} label={field.label}>
-                {field.type === "textarea" ? (
-                  <textarea
-                    rows={4}
-                    value={form.data[field.name] || ""}
-                    onChange={(event) => updateDynamicField(field.name, event.target.value)}
-                    className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
-                  />
-                ) : (
-                  <input
-                    type="text"
-                    value={form.data[field.name] || ""}
-                    onChange={(event) => updateDynamicField(field.name, event.target.value)}
-                    className="field-shell w-full rounded-2xl px-4 py-3 text-white outline-none"
-                  />
-                )}
+                {renderFieldInput(field)}
               </FormField>
             ))}
           </div>

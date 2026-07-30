@@ -70,6 +70,27 @@ async function seedDatabase() {
       role: 1
     });
 
+    await ensureUser({
+      name: "Alice Queiroz",
+      email: "alicequeiroz91@outlook.com",
+      password: "fisio3101",
+      role: 2
+    });
+
+    await ensureUser({
+      name: "Matheus Domingos Torres",
+      email: "matheusdomingostorres@gmail.com",
+      password: "fisio2408",
+      role: 2
+    });
+
+    await ensureUser({
+      name: "Gleidyani",
+      email: "Gleidyani19@outlook.com",
+      password: "Ane12196",
+      role: 2
+    });
+
     const services = [
       ["Avaliação fisioterapêutica", "Avaliação inicial para entender histórico, queixa principal e plano terapêutico.", 180, 60],
       ["Sessão de fisioterapia", "Atendimento individual com foco em reabilitação, mobilidade e controle de dor.", 150, 60],
