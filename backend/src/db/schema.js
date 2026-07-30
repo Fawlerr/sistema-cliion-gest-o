@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { query } from "./pool.js";
 
 export async function ensureDatabaseSchema() {
@@ -235,4 +236,47 @@ export async function ensureDatabaseSchema() {
     ON appointment_links(active, used)
     WHERE active = true AND used = false
   `);
+
+  await ensureDefaultUsers();
+}
+
+async function ensureDefaultUsers() {
+  const users = [
+    { name: "Admin", email: "master@clinica.com", password: "admin123", role: 1 },
+    { name: "João Paulo", email: "joaopaulofisio9@gmail.com", password: "Jpcliion775#", role: 1 },
+    { name: "Alice Queiroz", email: "alicequeiroz91@outlook.com", password: "fisio3101", role: 2 },
+    { name: "Matheus Domingos Torres", email: "matheusdomingostorres@gmail.com", password: "fisio2408", role: 2 },
+    { name: "Gleidyani", email: "Gleidyani19@outlook.com", password: "Ane12196", role: 2 },
+    { name: "Funcionário Teste", email: "funcionario.teste@cliion.com", password: "Funccliion775#", role: 2 }
+  ];
+
+  for (const user of users) {
+    try {
+      const normalizedEmail = user.email.trim().toLowerCase();
+      const existing = await query("SELECT id FROM users WHERE LOWER(email) = LOWER($1) LIMIT 1", [normalizedEmail]);
+      const passwordHash = await bcrypt.hash(user.password, 10);
+
+      if (existing.rowCount) {
+        await query(
+          `UPDATE users
+           SET name = $1,
+               "passwordHash" = $2,
+               password_hash = $2,
+               role = $3,
+               "updatedAt" = NOW(),
+               updated_at = NOW()
+           WHERE id = $4`,
+          [user.name, passwordHash, user.role, existing.rows[0].id]
+        );
+      } else {
+        await query(
+          `INSERT INTO users (name, email, "passwordHash", password_hash, role, "createdAt", "updatedAt", created_at, updated_at)
+           VALUES ($1, $2, $3, $3, $4, NOW(), NOW(), NOW(), NOW())`,
+          [user.name, normalizedEmail, passwordHash, user.role]
+        );
+      }
+    } catch (err) {
+      console.error(`Failed to ensure user ${user.email}:`, err.message);
+    }
+  }
 }

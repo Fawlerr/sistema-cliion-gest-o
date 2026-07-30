@@ -35,7 +35,7 @@ export async function createMedicalRecord({ patientId, type, date, notes, data }
   const result = await query(
     `
       INSERT INTO medical_records (id, "patientId", type, date, notes, data)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      VALUES ($1, $2, $3, $4, $5, $6::jsonb)
       RETURNING
         id,
         "patientId",
