@@ -92,7 +92,7 @@ export function MedicalRecordsSection({ patientId, patientName, patient, records
     <div className="space-y-5">
       <Panel
         title="Prontuários"
-        subtitle={`Todos os registros clínicos de ${patientName} concentrados em uma lista única, com o tipo escolhido dentro do formulário.`}
+        subtitle={`Prontuários e registros clínicos de ${patientName} organizados por data de atendimento.`}
         actions={
           <button
             type="button"

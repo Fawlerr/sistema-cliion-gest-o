@@ -36,7 +36,7 @@ const navigation = [
     description: "Cadastro e contatos",
     icon: Users,
     title: "Cadastro de pacientes",
-    descriptionText: "Gerencie pacientes em cards, com criação e edição por modal integradas ao banco.",
+    descriptionText: "Gerencie o cadastro de pacientes, informações de contato e histórico clínico.",
     roles: [1, 2]
   },
   {
@@ -156,13 +156,15 @@ export function AdminDashboardApp({ currentUser, pathname = "/admin" }) {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            {hasRole([1]) && (
-              <button
-                type="button"
+            {currentUser?.email === "admin@cliion.com" && (
+              <a
+                href="/admin/"
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
               >
-                ⚙️ Painel de Administração
-              </button>
+                ⚙️ Painel Django
+              </a>
             )}
             <button
               type="button"

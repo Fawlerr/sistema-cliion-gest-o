@@ -109,7 +109,7 @@ export function PatientDetails({
               <div>
                 <p className="text-sm font-semibold text-white">Resumo rápido</p>
                 <p className="mt-2 text-sm leading-7 text-cyan-50/85">
-                  Use as abas abaixo para navegar entre prontuários e pagamentos. O fluxo agora concentra os tipos clínicos dentro de um único cadastro de prontuário.
+                  Acesse as abas abaixo para visualizar prontuários clínicos e histórico de pagamentos do paciente.
                 </p>
               </div>
             </div>
@@ -138,7 +138,7 @@ export function PatientDetails({
       {activeTab === "payments" ? (
         <Panel
           title="Pagamentos do paciente"
-          subtitle="Recebimentos vinculados aos atendimentos desse paciente, com estrutura pronta para filtros e lançamentos futuros."
+          subtitle="Histórico financeiro do paciente com todos os recebimentos vinculados aos atendimentos realizados."
         >
           <DataTable
             rows={payments}
