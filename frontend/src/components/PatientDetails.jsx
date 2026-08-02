@@ -29,6 +29,10 @@ export function PatientDetails({
   useEffect(() => {
     let isActive = true;
 
+    if (!patient?.id) {
+      return;
+    }
+
     async function loadMedicalRecords() {
       setIsLoadingMedicalRecords(true);
       setMedicalRecordsError("");
@@ -55,13 +59,17 @@ export function PatientDetails({
     return () => {
       isActive = false;
     };
-  }, [patient.id]);
+  }, [patient?.id]);
+
+  if (!patient) {
+    return <LoadingState label="Carregando dados do paciente..." />;
+  }
 
   return (
     <div className="space-y-6">
       <Panel
         title={patient.name}
-        subtitle="Página individual do paciente com prontuários, pagamentos, avaliações e histórico preparado para evoluir para CRUD completo."
+        subtitle="Histórico clínico completo, prontuários, avaliações e gestão financeira do paciente."
         actions={
           <button
             type="button"

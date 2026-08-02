@@ -56,12 +56,12 @@ export function LoginPage() {
 
           <div className="grid gap-4 md:grid-cols-2">
             <article className="rounded-[28px] border border-white/10 bg-white/5 p-5">
-              <p className="text-sm font-semibold text-white">JWT com expiração</p>
-              <p className="mt-2 text-sm leading-7 text-slate-300">A sessão usa token com validade e validação no backend antes de liberar a área interna.</p>
+              <p className="text-sm font-semibold text-white">Segurança Avançada</p>
+              <p className="mt-2 text-sm leading-7 text-slate-300">Sessão criptografada e autenticada com proteção contínua dos dados clínicos.</p>
             </article>
             <article className="rounded-[28px] border border-white/10 bg-white/5 p-5">
-              <p className="text-sm font-semibold text-white">Acesso por papel</p>
-              <p className="mt-2 text-sm leading-7 text-slate-300">Administradores e funcionários enxergam somente as áreas permitidas para cada role.</p>
+              <p className="text-sm font-semibold text-white">Controle de Acesso</p>
+              <p className="mt-2 text-sm leading-7 text-slate-300">Interface adaptada para a função de cada profissional da clínica.</p>
             </article>
           </div>
         </section>

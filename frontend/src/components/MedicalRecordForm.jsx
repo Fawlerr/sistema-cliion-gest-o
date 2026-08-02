@@ -24,6 +24,21 @@ export function MedicalRecordForm({ open, onClose, onSubmit, isSaving, submitErr
     }
   }, [open]);
 
+  function handleTypeChange(newType) {
+    setForm((current) => ({
+      ...current,
+      type: newType,
+      data: {}
+    }));
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    if (onSubmit) {
+      onSubmit(form);
+    }
+  }
+
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
   }
