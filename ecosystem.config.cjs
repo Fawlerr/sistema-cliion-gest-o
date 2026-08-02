@@ -3,7 +3,8 @@ module.exports = {
     {
       name: "cliion-backend-django",
       cwd: "./admin-django",
-      script: "venv/bin/gunicorn",
+      script: "./venv/bin/gunicorn",
+      interpreter: "none",
       args: "config.wsgi:application --bind 127.0.0.1:8000 --workers 3",
       instances: 1,
       exec_mode: "fork",
