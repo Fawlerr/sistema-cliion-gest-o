@@ -182,6 +182,7 @@ export function MedicalRecordsSection({ patientId, patientName, patient, records
         onClose={() => setPreviewRecord(null)}
         patient={patient}
         record={previewRecord}
+        onDownloadPDF={handleDownloadPDF}
       />
 
       <div

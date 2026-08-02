@@ -135,7 +135,7 @@ export function PatientList({
       <Modal
         open={isModalOpen}
         title={form.id ? "Editar paciente" : "Novo paciente"}
-        subtitle="Os dados informados serão gravados diretamente no PostgreSQL."
+        subtitle="Informe os dados do paciente para atualização cadastral."
         onClose={onCloseModal}
       >
         <form className="space-y-4" onSubmit={onSubmit}>

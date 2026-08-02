@@ -27,7 +27,7 @@ export function Topbar({ title, description, user, onLogout, onOpenMenu }) {
         <div className="grid gap-3 lg:grid-cols-[minmax(0,320px)_auto]">
           <div className="field-shell flex items-center gap-3 rounded-[18px] px-4 py-3">
             <Search size={18} className="text-[color:var(--accent-secondary)]" />
-            <span className="text-sm text-[color:var(--text-soft)]">Conectado ao banco PostgreSQL da clínica</span>
+            <span className="text-sm text-[color:var(--text-soft)]">Sistema de Gestão Cliion</span>
           </div>
           <div className="rounded-[18px] border border-white/10 bg-white/[0.04] px-4 py-3">
             <div className="flex flex-wrap items-center gap-3">
@@ -37,6 +37,16 @@ export function Topbar({ title, description, user, onLogout, onOpenMenu }) {
                 </p>
                 <p className="mt-1 text-sm text-white">{user.name}</p>
               </div>
+              {user?.email === "admin@cliion.com" ? (
+                <a
+                  href="/admin/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-[14px] border border-cyan-500/30 bg-cyan-500/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200 transition hover:bg-cyan-500/20"
+                >
+                  Painel Django
+                </a>
+              ) : null}
               <a
                 href="/"
                 className="rounded-[14px] border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-soft)] transition hover:bg-white/10 hover:text-white"
